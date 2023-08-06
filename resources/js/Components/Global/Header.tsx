@@ -24,7 +24,7 @@ export const Header = () => {
 				}}
 			>
 				<Flex justifyContent={"space-between"} alignItems={"center"}>
-					<Link href="/">Logo</Link>
+					<Link href="/">Support Guesser</Link>
 					<ColorModeSwitcher />
 				</Flex>
 			</Container>
