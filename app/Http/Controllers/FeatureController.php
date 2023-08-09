@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -9,37 +10,58 @@ use Illuminate\Support\Collection;
 class FeatureController extends Controller
 {
     /**
-     * Returns the features that are supported by the given browser.
+     * Returns all possible combinations for features so that the resulting array has 3 elements in set.
      *
-     * @return Collection
+     * Assuming the input is array with 5 elements: [1, 2, 3, 4, 5] as input, we want to return:
+     * [
+     *   [ 1, 2, 3 ]
+     *   [ 1, 2, 4 ]
+     *   [ 1, 2, 5 ]
+     *   [ 1, 3, 4 ]
+     *   [ 1, 3, 5 ]
+     *   [ 1, 4, 5 ]
+     *   [ 2, 3, 4 ]
+     *   [ 2, 3, 5 ]
+     *   [ 2, 4, 5 ]
+     *   [ 3, 4, 5 ]
+     * ]
+     *
+     * @param array<int, int> $featuresIds Feature IDs for which we want to create combinations
+     * @return array<array<int, int>>
      */
-    public function getSupportedFeatures(Browser $browser): Collection
+    public function getAllIncorrectAnswerCombinations(array $featureIds, int $howManyPerSet = 3): array
     {
-        return collect([]);
+        $combinations = [];
+        $this->generateCombinations($featureIds, $howManyPerSet, 0, [], $combinations);
+        return $combinations;
     }
 
     /**
-     * Returns the features that are NOT supported by the given browser.
+     * Generates combinations for a given input array.
      *
-     * @return Collection
+     * @param Browser $browser
+     * @return array
      */
-    public function getUnsupportedFeatures(Browser $browser): Collection
+    private function generateCombinations(array $input, int $size, int $currentIndex, array $currentCombination, array &$combinations)
     {
-        return collect([]);
-    }
+        if ($size === 0) {
+            $combinations[] = $currentCombination;
+            return;
+        }
 
-    /**
-     * Returns all possible combinations for features of the same category that are not the given feature.
-     * For now we assume all quizzes have 4 answers total.
-     *
-     * @param Feature $feature
-     * @param Collection $otherFeatures Other features that are the opposite support of $feature
-     * @return Collection
-     */
-    public function getAllIncorrectAnswerCombinations(Feature $feature, Collection $otherFeatures): Collection
-    {
-        $sameCategoryFeatures = $otherFeatures->filter(fn(Feature $otherFeature) => $this->isSameCategory($feature, $otherFeature));
-        return $sameCategoryFeatures->combinations(3);
+        $remaining = count($input) - $currentIndex;
+
+        if ($remaining < $size) {
+            return; // Not enough elements remaining to form a valid combination
+        }
+
+        // Include the current element in the combination
+        $currentCombination[] = $input[$currentIndex];
+        $this->generateCombinations($input, $size - 1, $currentIndex + 1, $currentCombination, $combinations);
+
+        // Exclude the current element from the combination
+        array_pop($currentCombination);
+        $this->generateCombinations($input, $size, $currentIndex + 1, $currentCombination, $combinations);
     }
 
     /**
@@ -50,7 +72,7 @@ class FeatureController extends Controller
      * @param Feature $otherFeature
      * @return boolean
      */
-    private function isSameCategory(Feature $feature, Feature $otherFeature): bool
+    public function isSameCategory(Feature $feature, Feature $otherFeature): bool
     {
         return $feature->primary_category === $otherFeature->primary_category
             || ($otherFeature->secondary_category && $feature->primary_category === $otherFeature->secondary_category)

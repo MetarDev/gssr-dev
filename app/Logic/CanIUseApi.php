@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Logic;
 
@@ -13,18 +14,18 @@ use Illuminate\Support\Facades\DB;
 class CanIUseApi
 {
     private $categoriesMapping = [
-        'CSS' => 'CSS',
-        'CSS2' => 'CSS',
-        'CSS3' => 'CSS',
-        'Canvas' => 'HTML5',
-        'HTML5' => 'HTML5',
-        'JS' => 'JS',
-        'JS API' => 'JS API',
-        'PNG' => 'Other',
-        'Other' => 'Other',
-        'DOM' => 'Other',
-        'Security' => 'Security',
-        'SVG' => 'SVG',
+        'CSS' => Feature::CAT_CSS,
+        'CSS2' => Feature::CAT_CSS,
+        'CSS3' => Feature::CAT_CSS,
+        'Canvas' => Feature::CAT_HTML5,
+        'HTML5' => Feature::CAT_HTML5,
+        'JS' => Feature::CAT_JS,
+        'JS API' => Feature::CAT_JS_API,
+        'PNG' => Feature::CAT_OTHER,
+        'Other' => Feature::CAT_OTHER,
+        'DOM' => Feature::CAT_OTHER,
+        'Security' => Feature::CAT_SECURITY,
+        'SVG' => Feature::CAT_SVG,
     ];
 
     /**

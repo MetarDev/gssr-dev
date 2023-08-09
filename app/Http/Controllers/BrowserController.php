@@ -1,10 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
 use App\Models\Browser;
-use App\Models\Quiz;
-use Illuminate\Http\Request;
 
 class BrowserController extends Controller
 {

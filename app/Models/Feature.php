@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -9,6 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Feature extends Model
 {
     use HasFactory;
+
+    public const CAT_CSS = 'CSS';
+    public const CAT_HTML5 = 'HTML5';
+    public const CAT_JS = 'JS';
+    public const CAT_JS_API = 'JS API';
+    public const CAT_OTHER = 'Other';
+    public const CAT_SECURITY = 'Security';
+    public const CAT_SVG = 'SVG';
 
     /**
      * By default we only index / allow features with these statuses.
@@ -35,6 +44,24 @@ class Feature extends Model
     protected $casts = [
         'links' => 'array',
     ];
+
+    /**
+     * Returns all our categories
+     *
+     * @var array<int, string>
+     */
+    public static function getAllCategories(): array
+    {
+        return [
+            self::CAT_CSS,
+            self::CAT_HTML5,
+            self::CAT_JS,
+            self::CAT_JS_API,
+            self::CAT_OTHER,
+            self::CAT_SECURITY,
+            self::CAT_SVG,
+        ];
+    }
 
     /**
      * All browsers that support this feature

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Feature;
 use App\Models\Question;
 use App\Models\Quiz;
 use Illuminate\Database\Migrations\Migration;
@@ -15,8 +16,25 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', [Question::TYPE_BROWSER, Question::TYPE_FEATURE, Question::TYPE_GLOBAL, Question::TYPE_CUSTOM]);
-            $table->enum('supports', [Question::SUPPORTED, Question::NOT_SUPPORTED]);
+            $table->enum('type', [
+                Question::TYPE_BROWSER,
+                Question::TYPE_FEATURE,
+                Question::TYPE_GLOBAL,
+                Question::TYPE_CUSTOM
+            ]);
+            $table->enum('supports', [
+                Question::SUPPORTED,
+                Question::NOT_SUPPORTED
+            ]);
+            $table->enum('category', [
+                Feature::CAT_CSS,
+                Feature::CAT_HTML5,
+                Feature::CAT_JS,
+                Feature::CAT_JS_API,
+                Feature::CAT_OTHER,
+                Feature::CAT_SECURITY,
+                Feature::CAT_SVG,
+            ]);
             $table->string('hash')->unique();
             $table->foreignId('subject_id'); // Feature or Browser model ID, based on question's type
             $table->foreignId('correct_answer_id');

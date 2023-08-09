@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Console\Commands;
 
@@ -12,7 +13,7 @@ class GenerateQuestions extends Command
      *
      * @var string
      */
-    protected $signature = 'app:generate-questions';
+    protected $signature = 'app:generate-questions {--dry-run}';
 
     /**
      * The console command description.
@@ -44,7 +45,12 @@ class GenerateQuestions extends Command
      */
     public function handle()
     {
-        $this->questionGenerator->generateFeatureSupportQuestions();
-        // $this->questionGenerator->generateBrowserSupportQuestions();
+        $isDryRun = $this->option('dry-run');
+        $timeStart = microtime(true);
+        $this->info(sprintf('Starting question generation %s', $isDryRun ? '(dry run)' : ''));
+        $createdQuestion = $this->questionGenerator->generateBrowserSupportQuestions($isDryRun);
+
+        $end = round(microtime(true) - $timeStart, 5);
+        $this->info("$createdQuestion questions created in {$end}s");
     }
 }
