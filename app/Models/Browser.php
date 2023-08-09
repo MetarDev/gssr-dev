@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 
 class Browser extends Model
 {
@@ -19,6 +20,28 @@ class Browser extends Model
      * @var array<string>
      */
     protected $guarded = ['id'];
+
+    /**
+     * Return all supported features for a given category.
+     *
+     * @param string $category
+     * @return Collection<int, int>
+     */
+    public function getSupportedFeaturesByCategory(string $category): Collection
+    {
+        return $this->supported_features->filter(fn(Feature $feature) => $feature->primary_category === $category || $feature->secondary_category === $category);
+    }
+
+    /**
+     * Returns all unsupported features for a given category.
+     *
+     * @param string $category
+     * @return Collection<int, int>
+     */
+    public function getUnsupportedFeaturesByCategory(string $category): Collection
+    {
+        return $this->unsupported_features->filter(fn(Feature $feature) => $feature->primary_category === $category || $feature->secondary_category === $category);
+    }
 
     /**
      * The roles that belong to the user.

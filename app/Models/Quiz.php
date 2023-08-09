@@ -10,6 +10,8 @@ class Quiz extends Model
 {
     use HasFactory;
 
+    public const DEFAULT_TIMER = 30;
+
     /**
      * Guarded properties that can't be saved over.
      *

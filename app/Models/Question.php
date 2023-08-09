@@ -18,6 +18,8 @@ class Question extends Model
     public const SUPPORTED = 'supported';
     public const NOT_SUPPORTED = 'not_supported';
 
+    public const DEFAULT_ANSWER_COUNT = 4;
+
     /**
      * Guarded properties that can't be saved over.
      *

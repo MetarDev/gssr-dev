@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Logic\questionGenerator;
+use App\Logic\QuestionGenerator;
 use Illuminate\Console\Command;
 
 class GenerateQuestions extends Command
