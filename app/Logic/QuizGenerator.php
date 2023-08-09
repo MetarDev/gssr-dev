@@ -60,19 +60,32 @@ class QuizGenerator
         $quizzes->each(function (QuizOverview $quizOverview) use ($timer, $answersCount) {
             $questions = collect([]);
 
-            $quizOverview->browserSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
-                $question = $this->questionGenerator->generateBrowserSupportQuestion(
+            // $quizOverview->browserSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
+            //     $questions->push($this->questionGenerator->generateBrowserSupportQuestion(
+            //         $params['category'],
+            //         $params['supports'],
+            //         $answersCount,
+            //     ));
+            // });
+
+            // $quizOverview->featureSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
+            //     $questions->push($this->questionGenerator->generateFeatureSupportQuestion(
+            //         $params['type'],
+            //         $params['supports'],
+            //         $answersCount,
+            //     ));
+            // });
+
+            $quizOverview->globalSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
+                $questions->push($this->questionGenerator->generateGlobalSupportQuestion(
                     $params['category'],
                     $params['supports'],
                     $answersCount,
-                );
-
-                if (!$question) {
-                    return true;
-                }
-
-                $questions->push($question);
+                ));
             });
+
+            // Remove any null values.
+            $questions = $questions->filter();
 
             // Validate that quiz has enough questions
             if ($questions->count() < $quizOverview->totalQuestions) {

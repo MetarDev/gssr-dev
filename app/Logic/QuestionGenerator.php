@@ -9,6 +9,7 @@ use App\Http\Controllers\FeatureController;
 use App\Models\Browser;
 use App\Models\Feature;
 use App\Models\Question;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class QuestionGenerator
@@ -72,9 +73,71 @@ class QuestionGenerator
 
         // Probably needs a better method for generating questions but let's go with random for now.
         $correctAnswerId = $supports === Question::SUPPORTED ? $supportedFeatures->random()->id : $unsupportedFeatures->random()->id;
-        $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedFeatures->random($answerCount - 1)->pluck('id')->toArray() : $supportedFeatures->random(3)->pluck('id')->toArray();
+        $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedFeatures->random($answerCount - 1)->pluck('id')->toArray() : $supportedFeatures->random($answerCount - 1)->pluck('id')->toArray();
 
-        $question = $this->generateQuestion(Question::TYPE_BROWSER, $supports, $category, $incorrectAnswers, $correctAnswerId, $browser->id);
+        $question = $this->generateQuestion(Question::TYPE_BROWSER, $supports, $incorrectAnswers, $correctAnswerId, $browser->id);
+        return $question;
+    }
+
+    /**
+     * Creates a single feature support question.
+     *
+     * @param string $type
+     * @param string $supports
+     * @return Question|null
+     */
+    public function generateFeatureSupportQuestion(string $browserType, string $supports, int $answerCount): Question|null
+    {
+        $counter = 0;
+        do {
+            $feature = $this->featureController->getAllRelevant()->random();
+            $supportedBrowsers = $feature->getSupportedBrowsersByType($browserType);
+            $unsupportedBrowsers = $feature->getUnsupportedBrowsersByType($browserType);
+
+            if ($counter > self::MAX_GENERATE_QUESTIONS_LOOP) {
+                return null;
+            }
+            $counter++;
+        } while (!$this->hasEnoughAnswers($supports, $supportedBrowsers->count(), $unsupportedBrowsers->count(), $answerCount));
+
+        // Probably needs a better method for generating questions but let's go with random for now.
+        $correctAnswerId = $supports === Question::SUPPORTED ? $supportedBrowsers->random()->id : $unsupportedBrowsers->random()->id;
+        $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedBrowsers->random($answerCount - 1)->pluck('id')->toArray() : $supportedBrowsers->random($answerCount - 1)->pluck('id')->toArray();
+
+        $question = $this->generateQuestion(Question::TYPE_FEATURE, $supports, $incorrectAnswers, $correctAnswerId, $feature->id);
+        return $question;
+    }
+
+    /**
+     * Creates a global support question.
+     *
+     * @param string $category
+     * @param string $supports
+     * @return Question|null
+     */
+    public function generateGlobalSupportQuestion(string $category, string $supports, int $answerCount): Question|null
+    {
+        $counter = 0;
+        do {
+            $features = Feature::where('primary_category', $category)
+                ->orWhere('secondary_category', $category)
+                ->inRandomOrder()
+                ->limit($answerCount)
+                ->get()
+                ->sortByDesc('usage_global');
+
+            if ($counter > self::MAX_GENERATE_QUESTIONS_LOOP) {
+                return null;
+            }
+
+            $counter++;
+        } while (!$this->haveDifferentUsages($features) || !$this->hasEnoughAnswersSimple($features->count(), $answerCount));
+
+        // Probably needs a better method for generating questions but let's go with random for now.
+        $correctAnswerId = $supports === Question::SUPPORTED ? $features->first()->id : $features->last()->id;
+        $incorrectAnswers = $supports === Question::SUPPORTED ? $features->slice(1)->pluck('id')->toArray() : $features->slice(0, -1)->pluck('id')->toArray();
+
+        $question = $this->generateQuestion(Question::TYPE_GLOBAL, $supports, $incorrectAnswers, $correctAnswerId);
         return $question;
     }
 
@@ -101,7 +164,6 @@ class QuestionGenerator
                         $this->generateQuestion(
                             Question::TYPE_BROWSER,
                             Question::SUPPORTED,
-                            $category,
                             $incorrectAnswers,
                             $correctAnswerId,
                             $browser->id,
@@ -115,7 +177,6 @@ class QuestionGenerator
                         $this->generateQuestion(
                             Question::TYPE_BROWSER,
                             Question::NOT_SUPPORTED,
-                            $category,
                             $incorrectAnswers,
                             $correctAnswerId,
                             $browser->id,
@@ -147,32 +208,29 @@ class QuestionGenerator
      *
      * @param string $type
      * @param string $supports
-     * @param string $category
      * @param array $incorrectAnswers
      * @param integer $correctAnswerId
-     * @param integer $subjectId
+     * @param integer|null $subjectId
      * @return Question|null
      */
     private function generateQuestion(
         string $type,
         string $supports,
-        string $category,
         array $incorrectAnswers,
         int $correctAnswerId,
-        int $subjectId,
+        int|null $subjectId = null,
     ): Question|null
     {
         $answers = [ $correctAnswerId, $incorrectAnswers[0], $incorrectAnswers[1], $incorrectAnswers[2] ];
         sort($answers);
 
-        $hash = Hasher::calculateQuestionHash($type, $supports, $category, $subjectId, $answers);
+        $hash = Hasher::calculateQuestionHash($type, $supports, $subjectId, $answers);
 
         $question = Question::updateOrCreate(
             [ 'hash' => $hash ],
             [
                 'type' => $type,
                 'supports' => $supports,
-                'category' => $category,
                 'subject_id' => $subjectId,
                 'correct_answer_id' => $correctAnswerId,
                 'answers' => $answers,
@@ -180,7 +238,7 @@ class QuestionGenerator
             ]
         );
 
-        echo "Generating question for $category, $supports\n";
+        echo "Generating question for $supports\n";
         return $question ?? null;
     }
 
@@ -190,14 +248,39 @@ class QuestionGenerator
      * @param string $supports
      * @param int $supportedCount
      * @param int $unsupportedCount
+     * @param int $expectedAnswerCount
      * @return bool
      */
-    private function hasEnoughAnswers(string $supports, int $supportedCount, int $unsupportedCount, int $answerCount): bool
+    private function hasEnoughAnswers(string $supports, int $supportedCount, int $unsupportedCount, int $expectedAnswerCount): bool
     {
         if ($supports === Question::SUPPORTED) {
-            return $supportedCount >= 1 && $unsupportedCount >= $answerCount - 1;
+            return $supportedCount >= 1 && $unsupportedCount >= $expectedAnswerCount - 1;
         } else {
-            return $supportedCount >= $answerCount - 1 && $unsupportedCount >= 1;
+            return $supportedCount >= $expectedAnswerCount - 1 && $unsupportedCount >= 1;
         }
+    }
+
+    /**
+     * Check if quiz has enough answers to generate a question.
+     *
+     * @param int $answerCount
+     * @param int $expectedAnswerCount
+     * @return bool
+     */
+    private function hasEnoughAnswersSimple(int $answerCount, int $expectedAnswerCount): bool
+    {
+        return $answerCount === $expectedAnswerCount;
+    }
+
+    /**
+     * Check that all $features have different usage_global values.
+     *
+     * @param Collection $features
+     * @return bool
+     */
+    private function haveDifferentUsages(Collection $features): bool
+    {
+        $usages = $features->pluck('usage_global')->toArray();
+        return count(array_unique($usages)) === count($usages);
     }
 }

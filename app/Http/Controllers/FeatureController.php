@@ -10,6 +10,17 @@ use Illuminate\Support\Collection;
 class FeatureController extends Controller
 {
     /**
+     * Returns all features that have any global usage.
+     *
+     * @return Collection
+     */
+    public function getAllRelevant()
+    {
+        return Feature::whereIn('status', Feature::ALLOWED_STATUS)
+            ->get();
+    }
+
+    /**
      * Returns all possible combinations for features so that the resulting array has 3 elements in set.
      *
      * Assuming the input is array with 5 elements: [1, 2, 3, 4, 5] as input, we want to return:

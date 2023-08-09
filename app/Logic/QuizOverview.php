@@ -16,6 +16,20 @@ class QuizOverview
     public Collection $browserSupportQuestions;
 
     /**
+     * Feature support questions.
+     *
+     * @var Collection
+     */
+    public Collection $featureSupportQuestions;
+
+    /**
+     * Global support questions.
+     *
+     * @var Collection
+     */
+    public Collection $globalSupportQuestions;
+
+    /**
      * Timer for each quiz.
      *
      * @var integer
@@ -57,6 +71,40 @@ class QuizOverview
             // ],
         ]);
 
-        $this->totalQuestions = 3;
+        $this->featureSupportQuestions = collect([
+            [
+                'supports' => Question::SUPPORTED,
+                'type' => 'desktop',
+            ],
+            [
+                'supports' => Question::NOT_SUPPORTED,
+                'type' => 'desktop',
+            ],
+            [
+                'supports' => Question::NOT_SUPPORTED,
+                'type' => 'mobile',
+            ],
+            [
+                'supports' => Question::SUPPORTED,
+                'type' => 'mobile',
+            ],
+        ]);
+
+        $this->globalSupportQuestions = collect([
+            [
+                'supports' => Question::SUPPORTED,
+                'category' => 'JS',
+            ],
+            [
+                'supports' => Question::NOT_SUPPORTED,
+                'category' => 'JS API',
+            ],
+            [
+                'supports' => Question::NOT_SUPPORTED,
+                'category' => 'HTML5',
+            ],
+        ]);
+
+        $this->totalQuestions = $this->featureSupportQuestions->count() + $this->browserSupportQuestions->count() + $this->globalSupportQuestions->count();
     }
 }

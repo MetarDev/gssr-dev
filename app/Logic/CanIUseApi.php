@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
  */
 class CanIUseApi
 {
+    private const MINIMUM_BROWSER_USAGE = 0.003;
+
     private $categoriesMapping = [
         'CSS' => Feature::CAT_CSS,
         'CSS2' => Feature::CAT_CSS,
@@ -36,10 +38,9 @@ class CanIUseApi
     public function importFeatures()
     {
         // Read the JSON file
-        $rawFeatures = $this->readData('data');
-
-        // Filter out features of unwanted status
-        $features = collect($rawFeatures)->filter(
+        // For now to keep the DB a bit lighter (primarily the browser_supported_features and browser_unsupported_features tables)
+        // We'll just index official features which are used.
+        $features = collect($this->readData('data'))->filter(
             fn(array $feature) => in_array($feature['status'] ?? 'invalid-status', Feature::ALLOWED_STATUS, true)
         );
 
@@ -97,12 +98,20 @@ class CanIUseApi
     public function importBrowsers()
     {
         // Read the JSON file
-        $browsers = collect($this->readData('agents'));
+        // For now to keep the DB a bit lighter (primarily the browser_supported_features and browser_unsupported_features tables)
+        // Ignore mobile browsers which versions are no longer reliably tracked.
+        $browsers = collect($this->readData('agents'))->filter(
+            fn(array $browser, string $key) => $browser['type'] === Browser::TYPE_DESKTOP || in_array($key, Browser::ALLOWED_MOBILE_BROWSERS, true)
+        );
 
         // Foreach browser, update or create a new Browser model.
         DB::beginTransaction();
         $browsers->each(function (array $rawBrowser, string $key) {
-            collect($rawBrowser['version_list'])->each(function (array $rawVersion) use ($rawBrowser, $key) {
+
+            $relevantBrowsers = collect($rawBrowser['version_list'])
+                ->filter(fn(array $rawVersion) => $rawVersion['global_usage'] > self::MINIMUM_BROWSER_USAGE);
+
+            $relevantBrowsers->each(function (array $rawVersion) use ($rawBrowser, $key) {
                 $hash = Hasher::calculateUniqueBrowserHash($rawBrowser['browser'], $rawVersion['version'], $rawBrowser['type']);
                 Browser::updateOrCreate(
                     [ 'hash' => $hash ],

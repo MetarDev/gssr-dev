@@ -14,6 +14,11 @@ class Browser extends Model
     public const TYPE_DESKTOP = 'desktop';
     public const TYPE_MOBILE = 'mobile';
 
+    public const ALLOWED_MOBILE_BROWSERS = [
+        'ios_saf',
+        'samsung',
+    ];
+
     /**
      * Guarded properties that can't be saved over.
      *

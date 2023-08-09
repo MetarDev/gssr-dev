@@ -22,17 +22,15 @@ class Hasher
      *
      * @param string $type
      * @param string $supports
-     * @param string $category
-     * @param string $subjectId
+     * @param int|null $subjectId
      * @param array<string> $answers
      * @return string
      */
-    public static function calculateQuestionHash(string $type, string $supports, string $category, int $subjectId, array $answers): string
+    public static function calculateQuestionHash(string $type, string $supports, int|null $subjectId, array $answers): string
     {
         return md5(
             $type .
             $supports .
-            $category .
             $subjectId .
             implode($answers)
         );
