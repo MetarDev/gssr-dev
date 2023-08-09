@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('version');
             $table->enum('type', [Browser::TYPE_DESKTOP, Browser::TYPE_MOBILE]);
             $table->float('usage_global', 7, 5, true); // % with 5 decimals, same as in caniuse dataset
+            $table->string('hash')->unique();
             $table->timestamps();
         });
     }

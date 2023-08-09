@@ -4,6 +4,7 @@ namespace App\Logic;
 
 use App\Models\Browser;
 use App\Models\Feature;
+use App\Helpers\Hasher;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -41,22 +42,23 @@ class CanIUseApi
             fn(array $feature) => in_array($feature['status'] ?? 'invalid-status', Feature::ALLOWED_STATUS, true)
         );
 
-        // Foreach feature, create a new Feature model
+        // Foreach feature, update or create a new Feature model.
         DB::beginTransaction();
         $features->each(function (array $rawFeature) {
             [$primaryCategory, $secondaryCategory] = $this->mapCategoriesToCategory($rawFeature['categories']);
-            $feature = Feature::create([
-                'title' => $rawFeature['title'],
-                'description' => $rawFeature['description'],
-                'primary_category' => $primaryCategory,
-                'secondary_category' => $secondaryCategory,
-                'status' => $rawFeature['status'],
-                'spec' => $rawFeature['spec'],
-                'usage_global' => (float) $rawFeature['usage_perc_y'] ?? 0 + (float) $rawFeature['usage_perc_a'] ?? 0,
-                'links' => collect($rawFeature['links'])->map(fn(array $link) => $link['url'] ?? '')->toArray(),
-            ]);
-
-            $feature->save();
+            Feature::updateOrCreate(
+                [ 'title' => $rawFeature['title'] ],
+                [
+                    'title' => $rawFeature['title'],
+                    'description' => $rawFeature['description'],
+                    'primary_category' => $primaryCategory,
+                    'secondary_category' => $secondaryCategory,
+                    'status' => $rawFeature['status'],
+                    'spec' => $rawFeature['spec'],
+                    'usage_global' => (float) $rawFeature['usage_perc_y'] ?? 0 + (float) $rawFeature['usage_perc_a'] ?? 0,
+                    'links' => collect($rawFeature['links'])->map(fn(array $link) => $link['url'] ?? '')->toArray(),
+                ]
+            );
         });
         DB::commit();
     }
@@ -73,27 +75,27 @@ class CanIUseApi
 
         echo $browsers->count();
 
-        // Foreach browser, create a new Browser model
+        // Foreach browser, update or create a new Browser model.
         DB::beginTransaction();
-        $increment = 0;
-        $browsers->each(function (array $rawBrowser) use (&$increment) {
-            collect($rawBrowser['version_list'])->each(function (array $rawVersion) use ($rawBrowser, &$increment) {
-                $browser = Browser::create([
-                    'title' => $rawBrowser['browser'],
-                    'long_name' => $rawBrowser['long_name'],
-                    'abbr' => $rawBrowser['abbr'],
-                    'prefix' => $rawBrowser['prefix'],
-                    'version' => $rawVersion['version'],
-                    'type' => $rawBrowser['type'],
-                    'usage_global' => (float) $rawVersion['global_usage'],
-                ]);
-                $increment++;
-
-                $browser->save();
+        $browsers->each(function (array $rawBrowser) {
+            collect($rawBrowser['version_list'])->each(function (array $rawVersion) use ($rawBrowser) {
+                $hash = Hasher::calculateUniqueBrowserHash($rawBrowser['browser'], $rawVersion['version'], $rawBrowser['type']);
+                Browser::updateOrCreate(
+                    [ 'hash' => $hash ],
+                    [
+                        'title' => $rawBrowser['browser'],
+                        'long_name' => $rawBrowser['long_name'],
+                        'abbr' => $rawBrowser['abbr'],
+                        'prefix' => $rawBrowser['prefix'],
+                        'version' => $rawVersion['version'],
+                        'type' => $rawBrowser['type'],
+                        'hash' => $hash,
+                        'usage_global' => (float) $rawVersion['global_usage'],
+                    ]
+                );
             });
         });
 
-        echo "Created $increment browsers.";
         DB::commit();
     }
 
