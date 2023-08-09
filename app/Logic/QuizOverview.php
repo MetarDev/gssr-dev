@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Logic;
 
+use App\Models\Browser;
+use App\Models\Feature;
 use App\Models\Question;
 use Illuminate\Support\Collection;
 
@@ -44,67 +46,176 @@ class QuizOverview
     public int $totalQuestions;
 
     /**
+     * Question count for each quiz.
+     *
+     * @var integer
+     */
+    private int $questionCount;
+
+    /**
+     * Spread of question types for each quiz.
+     *
+     * @var array
+     */
+    private array $questionTypeSpread;
+
+    /**
      * Constructor.
      *
-     * @param integer $howManyQuizzes
      * @param integer $timer
+     * @param integer $questionCount
      */
-    public function __construct(int $timer)
+    public function __construct(int $timer, int $questionCount)
     {
         $this->timer = $timer;
-        $this->browserSupportQuestions = collect([
-            [
-                'supports' => Question::SUPPORTED,
-                'category' => 'CSS',
-            ],
-            [
-                'supports' => Question::NOT_SUPPORTED,
-                'category' => 'CSS',
-            ],
-            [
-                'supports' => Question::NOT_SUPPORTED,
-                'category' => 'HTML5',
-            ],
-            // [
-            //     'supports' => Question::SUPPORTED,
-            //     'category' => 'Security',
-            // ],
-        ]);
+        $this->questionCount = $questionCount;
 
-        $this->featureSupportQuestions = collect([
-            [
-                'supports' => Question::SUPPORTED,
-                'type' => 'desktop',
-            ],
-            [
-                'supports' => Question::NOT_SUPPORTED,
-                'type' => 'desktop',
-            ],
-            [
-                'supports' => Question::NOT_SUPPORTED,
-                'type' => 'mobile',
-            ],
-            [
-                'supports' => Question::SUPPORTED,
-                'type' => 'mobile',
-            ],
-        ]);
+        $this->questionTypeSpread = [
+            Question::TYPE_BROWSER => 0,
+            Question::TYPE_FEATURE => 0,
+            Question::TYPE_GLOBAL => 0,
+        ];
 
-        $this->globalSupportQuestions = collect([
-            [
-                'supports' => Question::SUPPORTED,
-                'category' => 'JS',
-            ],
-            [
-                'supports' => Question::NOT_SUPPORTED,
-                'category' => 'JS API',
-            ],
-            [
-                'supports' => Question::NOT_SUPPORTED,
-                'category' => 'HTML5',
-            ],
-        ]);
+        $this->browserSupportQuestions = collect([]);
+        $this->featureSupportQuestions = collect([]);
+        $this->globalSupportQuestions = collect([]);
 
         $this->totalQuestions = $this->featureSupportQuestions->count() + $this->browserSupportQuestions->count() + $this->globalSupportQuestions->count();
+    }
+
+    /**
+     * Initializes the quiz overview.
+     *
+     * @return void
+     */
+    public function initialize()
+    {
+        $this->generateQuestionTypeSpread();
+        $this->generateBrowserSupportSpread();
+        $this->generateFeatureSupportSpread();
+        $this->generateGlobalSupportSpread();
+    }
+
+    /**
+     * Generates a spread of question types based on $this->questionCount.
+     *
+     * @return void
+     */
+    private function generateQuestionTypeSpread()
+    {
+        $questionTypes = collect([
+            Question::TYPE_BROWSER,
+            Question::TYPE_BROWSER,
+            Question::TYPE_FEATURE,
+            Question::TYPE_FEATURE,
+            Question::TYPE_GLOBAL,
+            Question::TYPE_GLOBAL,
+            Question::TYPE_GLOBAL,
+        ]);
+
+        for ($i = 0; $i < $this->questionCount; $i++) {
+            $type = $questionTypes->random();
+            $this->questionTypeSpread[$type]++;
+        }
+    }
+
+    /**
+     * Generates a spread of browser support questions
+     *
+     * @return void
+     */
+    private function generateBrowserSupportSpread()
+    {
+        if ($this->questionTypeSpread[Question::TYPE_BROWSER] === 0) {
+            return;
+        }
+
+        for ($i = 0; $i < $this->questionTypeSpread[Question::TYPE_BROWSER]; $i++) {
+            $category = $this->getPreferentialCategorySpread()->random();
+            $supports = $this->getRandomSupports();
+
+            $this->browserSupportQuestions->push([
+                'supports' => $supports,
+                'category' => $category,
+              ]);
+        }
+    }
+
+    /**
+     * Generates a spread of feature support questions
+     *
+     * @return void
+     */
+    private function generateFeatureSupportSpread()
+    {
+        if ($this->questionTypeSpread[Question::TYPE_FEATURE] === 0) {
+            return;
+        }
+
+        $preferentialTypeSpread = collect([
+            Browser::TYPE_DESKTOP,
+            Browser::TYPE_DESKTOP,
+            Browser::TYPE_MOBILE,
+        ]);
+
+        for ($i = 0; $i < $this->questionTypeSpread[Question::TYPE_FEATURE]; $i++) {
+            $type = $preferentialTypeSpread->random();
+            $supports = $this->getRandomSupports();
+
+            $this->featureSupportQuestions->push([
+                'supports' => $supports,
+                'type' => $type,
+              ]);
+        }
+    }
+
+    /**
+     * Generates a spread of global usage questions
+     *
+     * @return void
+     */
+    private function generateGlobalSupportSpread()
+    {
+        if ($this->questionTypeSpread[Question::TYPE_GLOBAL] === 0) {
+            return;
+        }
+
+        for ($i = 0; $i < $this->questionTypeSpread[Question::TYPE_GLOBAL]; $i++) {
+            $category = $this->getPreferentialCategorySpread()->random();
+            $supports = $this->getRandomSupports();
+
+            $this->globalSupportQuestions->push([
+                'supports' => $supports,
+                'category' => $category,
+              ]);
+        }
+    }
+
+    /**
+     * Randomly pick supported or not supported.
+     *
+     * @return string
+     */
+    private function getRandomSupports(): string
+    {
+        return collect([
+            Question::SUPPORTED,
+            Question::NOT_SUPPORTED,
+        ])->random();
+    }
+
+    /**
+     * Gets a customized list of categories with some possibly being preferred over others.
+     *
+     * @return Collection
+     */
+    private function getPreferentialCategorySpread(): Collection
+    {
+        return collect([
+            Feature::CAT_CSS,
+            Feature::CAT_JS,
+            Feature::CAT_JS_API,
+            Feature::CAT_HTML5,
+        ]);
     }
 }

@@ -44,38 +44,52 @@ class QuizGenerator
      *
      * @param integer $howManyQuizzes
      * @param integer $timer
-     * @return void
+     * @return array<string, float>
      */
-    public function generateRandom(int $howManyQuizzes, int $timer, bool $isDryRun)
+    public function generateRandom(int $howManyQuizzes, int $timer, bool $isDryRun): array
     {
         // Based on $howManyQuizzes, create a spread of quizzes to generate based on type and support.
         $answersCount = Question::DEFAULT_ANSWER_COUNT;
         $quizzes = collect([]);
         for ($i = 0; $i < $howManyQuizzes; $i++) {
-            $quizzes->push(new QuizOverview($timer));
+            $quizOverview = new QuizOverview($timer, Quiz::DEFAULT_QUESTION_COUNT);
+            $quizOverview->initialize();
+            $quizzes->push($quizOverview);
         }
 
         // Generate quiz and questions for each quiz.
         DB::beginTransaction();
-        $quizzes->each(function (QuizOverview $quizOverview) use ($timer, $answersCount) {
+        $total_time = 0;
+        $browser_total = 0;
+        $feature_total = 0;
+        $global_total = 0;
+        $quizzes->each(function (QuizOverview $quizOverview) use ($timer, $answersCount, &$total_time, &$browser_total, &$feature_total, &$global_total) {
+            $logic_time_start = microtime(true);
             $questions = collect([]);
 
-            // $quizOverview->browserSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
-            //     $questions->push($this->questionGenerator->generateBrowserSupportQuestion(
-            //         $params['category'],
-            //         $params['supports'],
-            //         $answersCount,
-            //     ));
-            // });
+            $browser_start = microtime(true);
+            $quizOverview->browserSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
+                $questions->push($this->questionGenerator->generateBrowserSupportQuestion(
+                    $params['category'],
+                    $params['supports'],
+                    $answersCount,
+                ));
+            });
+            $browser_end = microtime(true) - $browser_start;
+            $browser_total += $browser_end;
 
-            // $quizOverview->featureSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
-            //     $questions->push($this->questionGenerator->generateFeatureSupportQuestion(
-            //         $params['type'],
-            //         $params['supports'],
-            //         $answersCount,
-            //     ));
-            // });
+            $feature_start = microtime(true);
+            $quizOverview->featureSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
+                $questions->push($this->questionGenerator->generateFeatureSupportQuestion(
+                    $params['type'],
+                    $params['supports'],
+                    $answersCount,
+                ));
+            });
+            $feature_end = microtime(true) - $feature_start;
+            $feature_total += $feature_end;
 
+            $global_start = microtime(true);
             $quizOverview->globalSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
                 $questions->push($this->questionGenerator->generateGlobalSupportQuestion(
                     $params['category'],
@@ -83,6 +97,8 @@ class QuizGenerator
                     $answersCount,
                 ));
             });
+            $global_end = microtime(true) - $global_start;
+            $global_total += $global_end;
 
             // Remove any null values.
             $questions = $questions->filter();
@@ -92,23 +108,33 @@ class QuizGenerator
                 \Illuminate\Support\Facades\Log::info("Quiz has less questions then expected, skipping. Got {$questions->count()}, expecting {$answersCount}");
                 return true;
             }
+            $logic_time_end = microtime(true) - $logic_time_start;
+            $total_time += $logic_time_end;
 
-            $hash = Hasher::calculateQuizHash($questions, $timer);
-            Quiz::updateOrCreate(
-                [ 'slug' => $hash ],
+            Quiz::firstOrCreate(
+                [ 'slug' => Hasher::calculateQuizHash($questions, $timer) ],
                 [
                     'timer' => $quizOverview->timer,
                     'questions' => $questions->shuffle()->pluck('id'),
-                    'slug' => $hash,
                 ]
             );
         });
 
         if (!$isDryRun) {
+            $db_start = microtime(true);
             DB::commit();
+            $db_end = microtime(true) - $db_start;
         } else {
             DB::rollBack();
         }
+
+        return [
+            'total-time-spent' => $total_time,
+            'browser-support-question-generation' => $browser_total,
+            'feature-support-question-generation' => $feature_total,
+            'global-support-question-generation' => $global_total,
+            'writing-to-db' => $db_end,
+        ];
     }
 
     /**

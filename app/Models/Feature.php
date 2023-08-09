@@ -73,7 +73,7 @@ class Feature extends Model
      */
     public function getSupportedBrowsersByType(string $type): Collection
     {
-        return $this->supported_browsers->filter(fn(Browser $browser) => $browser->type === $type);
+        return $this->supported_browsers->filter(fn(Browser $browser) => $browser->type === $type)->pluck('id');
     }
 
     /**
@@ -84,7 +84,7 @@ class Feature extends Model
      */
     public function getUnsupportedBrowsersByType(string $type): Collection
     {
-        return $this->unsupported_browsers->filter(fn(Browser $browser) => $browser->type === $type);
+        return $this->unsupported_browsers->filter(fn(Browser $browser) => $browser->type === $type)->pluck('id');
     }
 
     /**

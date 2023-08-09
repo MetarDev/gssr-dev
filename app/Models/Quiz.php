@@ -11,6 +11,7 @@ class Quiz extends Model
     use HasFactory;
 
     public const DEFAULT_TIMER = 30;
+    public const DEFAULT_QUESTION_COUNT = 10;
 
     /**
      * Guarded properties that can't be saved over.

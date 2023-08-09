@@ -34,7 +34,7 @@ class Browser extends Model
      */
     public function getSupportedFeaturesByCategory(string $category): Collection
     {
-        return $this->supported_features->filter(fn(Feature $feature) => $feature->primary_category === $category || $feature->secondary_category === $category);
+        return $this->supported_features->filter(fn(Feature $feature) => $feature->primary_category === $category || $feature->secondary_category === $category)->pluck('id');
     }
 
     /**
@@ -45,7 +45,7 @@ class Browser extends Model
      */
     public function getUnsupportedFeaturesByCategory(string $category): Collection
     {
-        return $this->unsupported_features->filter(fn(Feature $feature) => $feature->primary_category === $category || $feature->secondary_category === $category);
+        return $this->unsupported_features->filter(fn(Feature $feature) => $feature->primary_category === $category || $feature->secondary_category === $category)->pluck('id');
     }
 
     /**
