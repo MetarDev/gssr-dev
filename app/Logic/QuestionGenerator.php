@@ -31,6 +31,20 @@ class QuestionGenerator
     private FeatureController $featureController;
 
     /**
+     * Relevant features.
+     *
+     * @var Collection
+     */
+    private $relevantFeatures;
+
+    /**
+     * Used browsers.
+     *
+     * @var Collection
+     */
+    private $usedBrowsers;
+
+    /**
      * Constructor.
      *
      * @param CanIUseApi $canIUseApi
@@ -39,6 +53,8 @@ class QuestionGenerator
     {
         $this->browserController = $browserController;
         $this->featureController = $featureController;
+        $this->relevantFeatures = collect([]);
+        $this->usedBrowsers = collect([]);
     }
 
     /**
@@ -61,19 +77,19 @@ class QuestionGenerator
     {
         $counter = 0;
         do {
-            $browser = $this->browserController->getAllUsed()->random();
-            $supportedFeatures = $browser->getSupportedFeaturesByCategory($category);
-            $unsupportedFeatures = $browser->getUnsupportedFeaturesByCategory($category);
+            $browser = $this->getAllUsedBrowsers()->random();
+            $supportedFeatureIds = $browser->getSupportedFeaturesByCategory($category);
+            $unsupportedFeatureIds = $browser->getUnsupportedFeaturesByCategory($category);
 
             if ($counter > self::MAX_GENERATE_QUESTIONS_LOOP) {
                 return null;
             }
             $counter++;
-        } while (!$this->hasEnoughAnswers($supports, $supportedFeatures->count(), $unsupportedFeatures->count(), $answerCount));
+        } while (!$this->hasEnoughAnswers($supports, $supportedFeatureIds->count(), $unsupportedFeatureIds->count(), $answerCount));
 
         // Probably needs a better method for generating questions but let's go with random for now.
-        $correctAnswerId = $supports === Question::SUPPORTED ? $supportedFeatures->random()->id : $unsupportedFeatures->random()->id;
-        $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedFeatures->random($answerCount - 1)->pluck('id')->toArray() : $supportedFeatures->random($answerCount - 1)->pluck('id')->toArray();
+        $correctAnswerId = $supports === Question::SUPPORTED ? $supportedFeatureIds->random() : $unsupportedFeatureIds->random();
+        $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedFeatureIds->random($answerCount - 1)->toArray() : $supportedFeatureIds->random($answerCount - 1)->toArray();
 
         $question = $this->generateQuestion(Question::TYPE_BROWSER, $supports, $incorrectAnswers, $correctAnswerId, $browser->id);
         return $question;
@@ -90,19 +106,19 @@ class QuestionGenerator
     {
         $counter = 0;
         do {
-            $feature = $this->featureController->getAllRelevant()->random();
-            $supportedBrowsers = $feature->getSupportedBrowsersByType($browserType);
-            $unsupportedBrowsers = $feature->getUnsupportedBrowsersByType($browserType);
+            $feature = $this->getAllRelevantFeatures()->random();
+            $supportedBrowserIds = $feature->getSupportedBrowsersByType($browserType);
+            $unsupportedBrowserIds = $feature->getUnsupportedBrowsersByType($browserType);
 
             if ($counter > self::MAX_GENERATE_QUESTIONS_LOOP) {
                 return null;
             }
             $counter++;
-        } while (!$this->hasEnoughAnswers($supports, $supportedBrowsers->count(), $unsupportedBrowsers->count(), $answerCount));
+        } while (!$this->hasEnoughAnswers($supports, $supportedBrowserIds->count(), $unsupportedBrowserIds->count(), $answerCount));
 
         // Probably needs a better method for generating questions but let's go with random for now.
-        $correctAnswerId = $supports === Question::SUPPORTED ? $supportedBrowsers->random()->id : $unsupportedBrowsers->random()->id;
-        $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedBrowsers->random($answerCount - 1)->pluck('id')->toArray() : $supportedBrowsers->random($answerCount - 1)->pluck('id')->toArray();
+        $correctAnswerId = $supports === Question::SUPPORTED ? $supportedBrowserIds->random() : $unsupportedBrowserIds->random();
+        $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedBrowserIds->random($answerCount - 1)->toArray() : $supportedBrowserIds->random($answerCount - 1)->toArray();
 
         $question = $this->generateQuestion(Question::TYPE_FEATURE, $supports, $incorrectAnswers, $correctAnswerId, $feature->id);
         return $question;
@@ -150,7 +166,7 @@ class QuestionGenerator
     {
         // Foreach browser, get all supported and unsupported features
         $totalQuestions = 0;
-        $this->browserController->getAllUsed()->each(function (Browser $browser) use (&$totalQuestions, $isDryRun) {
+        $this->getAllUsedBrowsers()->each(function (Browser $browser) use (&$totalQuestions, $isDryRun) {
 
             foreach (Feature::getAllCategories() as $category) {
                 $supportedFeatures = $browser->supported_features->filter(fn(Feature $feature) => $feature->primary_category === $category || $feature->secondary_category === $category)->pluck('id')->toArray();
@@ -238,8 +254,35 @@ class QuestionGenerator
             ]
         );
 
-        echo "Generating question for $supports\n";
         return $question ?? null;
+    }
+
+    /**
+     * Get all relevant features.
+     *
+     * @return Collection
+     */
+    private function getAllRelevantFeatures()
+    {
+        if ($this->relevantFeatures->isEmpty()) {
+            $this->relevantFeatures = $this->featureController->getAllRelevant();
+        }
+
+        return $this->relevantFeatures;
+    }
+
+    /**
+     * Get all used Browsers.
+     *
+     * @return Collection
+     */
+    private function getAllUsedBrowsers()
+    {
+        if ($this->usedBrowsers->isEmpty()) {
+            $this->usedBrowsers = $this->browserController->getAllUsed();
+        }
+
+        return $this->usedBrowsers;
     }
 
     /**
