@@ -16,8 +16,15 @@ class Feature extends Model
      */
     public const ALLOWED_STATUS = [
         'ls',
-		'cr',
+        'cr',
     ];
+
+    /**
+     * Guarded properties that can't be saved over.
+     *
+     * @var array<string>
+     */
+    protected $guarded = ['id'];
 
     /**
      * Casting some Model attributes

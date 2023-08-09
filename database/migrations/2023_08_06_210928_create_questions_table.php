@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->enum('type', [Question::TYPE_BROWSER, Question::TYPE_FEATURE, Question::TYPE_GLOBAL, Question::TYPE_CUSTOM]);
-            $table->foreignId('answer_1_id'); // Feature or Browser model ID, based on question's type
-            $table->foreignId('answer_2_id');
-            $table->foreignId('answer_3_id');
-            $table->foreignId('answer_4_id');
+            $table->enum('supports', [Question::SUPPORTED, Question::NOT_SUPPORTED]);
+            $table->string('hash')->unique();
+            $table->foreignId('subject_id'); // Feature or Browser model ID, based on question's type
             $table->foreignId('correct_answer_id');
+            $table->string('answers'); // Feature or Browser model ID, based on question's type
             $table->timestamps();
         });
     }

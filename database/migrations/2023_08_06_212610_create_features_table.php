@@ -12,14 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('features', function (Blueprint $table) {
+            $categoryMaxLength = 16;
             $table->id();
             $table->string('title');
-            $table->string('description');
-            $table->string('category'); // "cats" in caniuse dataset, already mapped to main category so "CSS" instead of "CSS3"
-            $table->string('status');
-            $table->string('links');
+            $table->longText('description');
+            $table->string('primary_category', $categoryMaxLength); // "cats" in caniuse dataset, already mapped to main category so "CSS" instead of "CSS3"
+            $table->string('secondary_category', $categoryMaxLength)->nullable(); // "cats" in caniuse dataset, already mapped to main category so "CSS" instead of "CSS3"
+            $table->string('status', 16);
+            $table->longText('links');
             $table->string('spec');
-            $table->float('global_support');
+            $table->float('usage_global')->unsigned();
+            $table->timestamps();
         });
     }
 

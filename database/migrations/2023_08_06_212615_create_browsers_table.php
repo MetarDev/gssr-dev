@@ -15,12 +15,13 @@ return new class extends Migration
         Schema::create('browsers', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->enum('type', [Browser::TYPE_DESKTOP, Browser::TYPE_MOBILE]);
             $table->string('long_name');
             $table->string('abbr');
             $table->string('prefix');
             $table->string('version');
+            $table->enum('type', [Browser::TYPE_DESKTOP, Browser::TYPE_MOBILE]);
             $table->float('usage_global', 7, 5, true); // % with 5 decimals, same as in caniuse dataset
+            $table->timestamps();
         });
     }
 

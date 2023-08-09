@@ -9,10 +9,20 @@ class Question extends Model
 {
     use HasFactory;
 
-    public const TYPE_GLOBAL = 'global';
-    public const TYPE_FEATURE = 'feature';
-    public const TYPE_BROWSER = 'browser';
+    public const TYPE_GLOBAL = 'usage_global';
+    public const TYPE_FEATURE = 'feature_support';
+    public const TYPE_BROWSER = 'browser_support';
     public const TYPE_CUSTOM = 'custom';
+
+    public const SUPPORTED = 'supported';
+    public const NOT_SUPPORTED = 'not_supported';
+
+    /**
+     * Guarded properties that can't be saved over.
+     *
+     * @var array<string>
+     */
+    protected $guarded = ['id'];
 
     /**
      * Casting some Model attributes

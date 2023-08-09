@@ -11,4 +11,11 @@ class Browser extends Model
 
     public const TYPE_DESKTOP = 'desktop';
     public const TYPE_MOBILE = 'mobile';
+
+    /**
+     * Guarded properties that can't be saved over.
+     *
+     * @var array<string>
+     */
+    protected $guarded = ['id'];
 }
