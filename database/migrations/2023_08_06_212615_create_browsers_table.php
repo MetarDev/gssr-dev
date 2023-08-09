@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('browsers', function (Blueprint $table) {
             $table->id();
+            $table->string('key'); // key from the caniuse json. Used for checking feature support.
             $table->string('title');
             $table->string('long_name');
             $table->string('abbr');

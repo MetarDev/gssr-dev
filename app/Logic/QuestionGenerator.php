@@ -41,6 +41,9 @@ class QuestionGenerator
      */
     public function generateFeatureSupportQuestions()
     {
+        // Get 1 random feature using Eloquent
+        $feature = Feature::inRandomOrder()->first();
+
     }
 
     /**
@@ -50,6 +53,11 @@ class QuestionGenerator
     {
         // Foreach browser, get all supported and unsupported features
         $this->browserController->getAllUsed()->each(function (Browser $browser) {
+            $supported = $browser->supported_features;
+            $unsupported = $browser->unsupported_features;
+
+            return true;
+
             $supportedFeatures = $this->featureController->getSupportedFeatures($browser);
             $unsupportedFeatures = $this->featureController->getUnsupportedFeatures($browser);
 

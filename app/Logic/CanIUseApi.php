@@ -44,9 +44,10 @@ class CanIUseApi
 
         // Foreach feature, update or create a new Feature model.
         DB::beginTransaction();
-        $features->each(function (array $rawFeature) {
+        $allBrowsers = Browser::get()->map(fn(Browser $browser) => $browser->only(['id', 'key', 'version']));
+        $features->each(function (array $rawFeature) use ($allBrowsers) {
             [$primaryCategory, $secondaryCategory] = $this->mapCategoriesToCategory($rawFeature['categories']);
-            Feature::updateOrCreate(
+            $feature = Feature::updateOrCreate(
                 [ 'title' => $rawFeature['title'] ],
                 [
                     'title' => $rawFeature['title'],
@@ -59,7 +60,31 @@ class CanIUseApi
                     'links' => collect($rawFeature['links'])->map(fn(array $link) => $link['url'] ?? '')->toArray(),
                 ]
             );
+
+            // Go through all browsers and attach them to the feature if supported (which we check on the caniuse data)
+            $supportedBrowserIds = [];
+            $unsupportedBrowserIds = [];
+            $allBrowsersIds = collect($allBrowsers)->pluck('id')->toArray();
+
+            $allBrowsers->each(
+                function ($browser) use ($rawFeature, &$supportedBrowserIds, &$unsupportedBrowserIds) {
+                    if (isset($rawFeature['stats'][ $browser['key'] ][ $browser['version'] ])
+                        && $rawFeature['stats'][ $browser['key'] ][ $browser['version'] ] === 'y'
+                    ) {
+                        $supportedBrowserIds[] = $browser['id'];
+                    } else {
+                        $unsupportedBrowserIds[] = $browser['id'];
+                    }
+                }
+            );
+
+            $feature->supported_browsers()->detach($allBrowsersIds);
+            $feature->unsupported_browsers()->detach($allBrowsersIds);
+
+            $feature->supported_browsers()->attach($supportedBrowserIds);
+            $feature->unsupported_browsers()->attach($unsupportedBrowserIds);
         });
+
         DB::commit();
     }
 
@@ -73,17 +98,16 @@ class CanIUseApi
         // Read the JSON file
         $browsers = collect($this->readData('agents'));
 
-        echo $browsers->count();
-
         // Foreach browser, update or create a new Browser model.
         DB::beginTransaction();
-        $browsers->each(function (array $rawBrowser) {
-            collect($rawBrowser['version_list'])->each(function (array $rawVersion) use ($rawBrowser) {
+        $browsers->each(function (array $rawBrowser, string $key) {
+            collect($rawBrowser['version_list'])->each(function (array $rawVersion) use ($rawBrowser, $key) {
                 $hash = Hasher::calculateUniqueBrowserHash($rawBrowser['browser'], $rawVersion['version'], $rawBrowser['type']);
                 Browser::updateOrCreate(
                     [ 'hash' => $hash ],
                     [
                         'title' => $rawBrowser['browser'],
+                        'key' => $key,
                         'long_name' => $rawBrowser['long_name'],
                         'abbr' => $rawBrowser['abbr'],
                         'prefix' => $rawBrowser['prefix'],

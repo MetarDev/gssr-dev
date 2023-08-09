@@ -57,7 +57,8 @@
         "phpstan:check": "./vendor/bin/phpstan analyse --memory-limit=1G",
         "style:check": "./vendor/bin/phpcs --extensions=php .",
         "style:fix": "./vendor/bin/phpcbf --extensions=php .",
-        "check-everything": "composer style:check && composer phpstan:check && composer test"
+        "check-everything": "composer style:check && composer phpstan:check && composer test",
+        "generate:all": "php artisan migrate:fresh && php artisan app:import-browsers && php artisan app:import-features && php artisan app:generate-questions"
     },
     "extra": {
         "laravel": {

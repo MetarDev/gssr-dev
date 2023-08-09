@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Feature extends Model
 {
@@ -34,4 +35,20 @@ class Feature extends Model
     protected $casts = [
         'links' => 'array',
     ];
+
+    /**
+     * All browsers that support this feature
+     */
+    public function supported_browsers(): BelongsToMany
+    {
+        return $this->belongsToMany(Browser::class, 'browser_supported_features', 'feature_id', 'browser_id');
+    }
+
+    /**
+     * All browsers that do not support this feature
+     */
+    public function unsupported_browsers(): BelongsToMany
+    {
+        return $this->belongsToMany(Browser::class, 'browser_unsupported_features', 'feature_id', 'browser_id');
+    }
 }
