@@ -58,7 +58,7 @@ class CanIUseApi
                     'secondary_category' => $secondaryCategory,
                     'status' => $rawFeature['status'],
                     'spec' => $rawFeature['spec'],
-                    'usage_global' => (float) $rawFeature['usage_perc_y'] ?? 0 + (float) $rawFeature['usage_perc_a'] ?? 0,
+                    'usage_global' => (float) ($rawFeature['usage_perc_y'] ?? 0) + (float) ($rawFeature['usage_perc_a'] ?? 0),
                     'links' => collect($rawFeature['links'])->map(fn(array $link) => $link['url'] ?? '')->toArray(),
                 ]
             );

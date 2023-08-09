@@ -37,7 +37,7 @@ class FeatureController extends Controller
      *   [ 3, 4, 5 ]
      * ]
      *
-     * @param array<int, int> $featuresIds Feature IDs for which we want to create combinations
+     * @param array<int, int> $featureIds Feature IDs for which we want to create combinations
      * @return array<array<int, int>>
      */
     public function getAllIncorrectAnswerCombinations(array $featureIds, int $howManyPerSet = 3): array
@@ -50,8 +50,12 @@ class FeatureController extends Controller
     /**
      * Generates combinations for a given input array.
      *
-     * @param Browser $browser
-     * @return array
+     * @param array<int, int> $input
+     * @param int $size
+     * @param int $currentIndex
+     * @param array<int, int> $currentCombination
+     * @param array<array<int, int>> $combinations
+     * @return void
      */
     private function generateCombinations(array $input, int $size, int $currentIndex, array $currentCombination, array &$combinations)
     {

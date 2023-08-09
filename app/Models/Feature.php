@@ -50,7 +50,7 @@ class Feature extends Model
     /**
      * Returns all our categories
      *
-     * @var array<int, string>
+     * @return array<int, string>
      */
     public static function getAllCategories(): array
     {

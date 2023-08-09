@@ -47,7 +47,8 @@ class QuestionGenerator
     /**
      * Constructor.
      *
-     * @param CanIUseApi $canIUseApi
+     * @param BrowserController $browserController
+     * @param FeatureController $featureController
      */
     public function __construct(BrowserController $browserController, FeatureController $featureController)
     {
@@ -98,11 +99,11 @@ class QuestionGenerator
     /**
      * Creates a single feature support question.
      *
-     * @param string $type
+     * @param string $browserType
      * @param string $supports
      * @return Question|null
      */
-    public function generateFeatureSupportQuestion(string $browserType, string $supports, int $answerCount): Question|null
+    public function generateFeatureSupportQuestion(string $browserType, string $supports, int $answerCount): mixed
     {
         $counter = 0;
         do {
@@ -120,8 +121,7 @@ class QuestionGenerator
         $correctAnswerId = $supports === Question::SUPPORTED ? $supportedBrowserIds->random() : $unsupportedBrowserIds->random();
         $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedBrowserIds->random($answerCount - 1)->toArray() : $supportedBrowserIds->random($answerCount - 1)->toArray();
 
-        $question = $this->generateQuestion(Question::TYPE_FEATURE, $supports, $incorrectAnswers, $correctAnswerId, $feature->id);
-        return $question;
+        return $this->generateQuestion(Question::TYPE_FEATURE, $supports, $incorrectAnswers, $correctAnswerId, $feature->id);
     }
 
     /**
@@ -227,7 +227,7 @@ class QuestionGenerator
      * @param array $incorrectAnswers
      * @param integer $correctAnswerId
      * @param integer|null $subjectId
-     * @return Question|null
+     * @return Question
      */
     private function generateQuestion(
         string $type,
@@ -235,7 +235,7 @@ class QuestionGenerator
         array $incorrectAnswers,
         int $correctAnswerId,
         int|null $subjectId = null,
-    ): Question|null
+    ): Question
     {
         $answers = [ $correctAnswerId, $incorrectAnswers[0], $incorrectAnswers[1], $incorrectAnswers[2] ];
         sort($answers);
@@ -254,7 +254,7 @@ class QuestionGenerator
             ]
         );
 
-        return $question ?? null;
+        return $question;
     }
 
     /**

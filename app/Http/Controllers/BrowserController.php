@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Browser;
+use Illuminate\Support\Collection;
 
 class BrowserController extends Controller
 {

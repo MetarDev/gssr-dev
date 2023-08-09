@@ -120,13 +120,13 @@ class QuizGenerator
             );
         });
 
+        $db_start = microtime(true);
         if (!$isDryRun) {
-            $db_start = microtime(true);
             DB::commit();
-            $db_end = microtime(true) - $db_start;
         } else {
             DB::rollBack();
         }
+        $db_end = microtime(true) - $db_start;
 
         return [
             'total-time-spent' => $total_time,
