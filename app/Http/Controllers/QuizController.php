@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -47,7 +48,7 @@ class QuizController extends Controller
     public function indexSpecificQuiz(string $slug)
     {
         $quiz = Quiz::where('slug', $slug)->firstOrFail();
-        $questions = Question::whereIn('id', $quiz->questions)->get();
+        $questions = $this->questionController->buildQuestionsForQuiz($quiz);
         return Inertia::render('Quiz', [
             'quiz' => $quiz,
             'questions' => $questions,

@@ -12,7 +12,8 @@ import { HighlightText } from "@/Components/HighlightText";
 import DefaultLayout from "@/Layouts/DefaultLayout";
 import { useQuiz } from "@/Hooks/useQuiz";
 import QuizSummary from "@/Components/Quiz/QuizSummary";
-import { Question, Quiz } from "@/types/quiz";
+import { QuestionInterface, Quiz } from "@/types/quiz";
+import Question from "@/Components/Quiz/Question";
 
 export default function QuizPage({
   auth,
@@ -22,12 +23,21 @@ export default function QuizPage({
 }: PageProps<{
   slug: string
   quiz: Quiz,
-  questions: Question[],
+  questions: QuestionInterface[],
   url: string,
 }>) {
   const { colorMode } = useColorMode();
 
-  const { hasStarted, startQuiz } = useQuiz({ quiz, questions });
+  console.log({questions});
+
+  const {
+    hasStarted,
+    currentQuestion,
+    isCurrentQuestionAnswered,
+    startQuiz,
+    onAnswer,
+    onNextQuestion,
+  } = useQuiz({ quiz, questions });
 
   return (
     <DefaultLayout justifyContent="center" title="Quiz">
@@ -39,7 +49,12 @@ export default function QuizPage({
         />
       }
       {hasStarted &&
-        <div>Quiz started</div>
+        <Question
+          isCurrentQuestionAnswered={isCurrentQuestionAnswered}
+          question={currentQuestion}
+          onAnswer={onAnswer}
+          onNextQuestion={onNextQuestion}
+        />
       }
     </DefaultLayout>
   );
