@@ -40,6 +40,8 @@ export default function Homepage({
             features does browser X support? Test your knowledge with this fun
             trivia quiz!
           </Text>
+
+          <Button as={Link} href="/quiz">Start quiz!</Button>
         </VStack>
       </Stack>
     </DefaultLayout>

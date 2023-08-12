@@ -2,11 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Question;
 use App\Models\Quiz;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class QuizController extends Controller
 {
+
+    /**
+     * The question controller instance.
+     *
+     * @var QuestionController
+     */
+    protected $questionController;
+
+    /**
+     * The question controller instance.
+     *
+     * @var QuestionController
+     */
+    public function __construct(QuestionController $questionController)
+    {
+        $this->questionController = $questionController;
+    }
+
     /**
      * Display the quiz page.
      *
@@ -26,8 +46,12 @@ class QuizController extends Controller
      */
     public function indexSpecificQuiz(string $slug)
     {
+        $quiz = Quiz::where('slug', $slug)->firstOrFail();
+        $questions = Question::whereIn('id', $quiz->questions)->get();
         return Inertia::render('Quiz', [
-            'slug' => $slug,
+            'quiz' => $quiz,
+            'questions' => $questions,
+            'url' => Request::url(),
         ]);
     }
     /**

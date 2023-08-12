@@ -70,7 +70,7 @@ const theme = {
 export default extendTheme(
 	withDefaultColorScheme({
 		colorScheme: 'orange',
-		components: ['Button', 'Badge', 'Tabs', 'Radio'],
+		components: ['Button', 'IconButton', 'Badge', 'Tabs', 'Radio'],
 	}),
 	withDefaultProps({
 		defaultProps: {
