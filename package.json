@@ -25,10 +25,12 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "@chakra-ui/icons": "^2.1.0",
         "@chakra-ui/react": "^2.8.0",
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
         "caniuse-db": "^1.0.30001519",
-        "framer-motion": "^10.15.0"
+        "framer-motion": "^10.15.0",
+        "react-icons": "^4.10.1"
     }
 }
