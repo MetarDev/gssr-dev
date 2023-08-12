@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuizController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,6 +25,12 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('/quiz', function () {
+    return redirect('/');
+});
+Route::get('/quiz', [QuizController::class, 'index'])->name('quiz');
+Route::get('/quiz/{slug}', [QuizController::class, 'indexSpecificQuiz'])->name('specific-quiz');
 
 // Not part of MVP
 // ---
