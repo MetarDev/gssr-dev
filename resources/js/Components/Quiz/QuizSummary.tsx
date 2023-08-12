@@ -25,9 +25,11 @@ export default function QuizSummary({
     questions,
   },
   url,
+  onStartQuiz,
 }: {
   quiz: Quiz;
   url: string;
+  onStartQuiz: () => void;
 }) {
   return (
     <VStack
@@ -62,7 +64,7 @@ export default function QuizSummary({
           </Table>
         </TableContainer>
 
-        <Button colorScheme="green" alignSelf={"flex-end"} marginTop={"8"}>Start quiz!</Button>
+        <Button colorScheme="green" alignSelf={"flex-end"} marginTop={"8"} onClick={onStartQuiz}>Start quiz!</Button>
       </StyledCard>
     </VStack>
   );
