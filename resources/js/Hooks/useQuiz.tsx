@@ -10,6 +10,9 @@ export const useQuiz = ({
 }) => {
   const [hasStarted, setHasStarted] = useState(false);
   const [isCurrentQuestionAnswered, setIsCurrentQuestionAnswered] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  const numberOfQuestions = questions.length;
 
   const startQuiz = () => {
     setHasStarted(true);
@@ -29,6 +32,8 @@ export const useQuiz = ({
     currentQuestion,
     hasStarted,
     isCurrentQuestionAnswered,
+    currentQuestionIndex,
+    numberOfQuestions,
     startQuiz,
     onAnswer,
     onNextQuestion,

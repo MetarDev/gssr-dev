@@ -120,28 +120,6 @@ class QuizOverview
     }
 
     /**
-     * Generates a spread of browser support questions
-     *
-     * @return void
-     */
-    private function generateBrowserSupportSpread()
-    {
-        if ($this->questionTypeSpread[Question::TYPE_BROWSER] === 0) {
-            return;
-        }
-
-        for ($i = 0; $i < $this->questionTypeSpread[Question::TYPE_BROWSER]; $i++) {
-            $category = $this->getPreferentialCategorySpread()->random();
-            $supports = $this->getRandomSupports();
-
-            $this->browserSupportQuestions->push([
-                'supports' => $supports,
-                'category' => $category,
-              ]);
-        }
-    }
-
-    /**
      * Generates a spread of feature support questions
      *
      * @return void
@@ -152,17 +130,39 @@ class QuizOverview
             return;
         }
 
+        for ($i = 0; $i < $this->questionTypeSpread[Question::TYPE_FEATURE]; $i++) {
+            $category = $this->getPreferentialCategorySpread()->random();
+            $supports = $this->getRandomSupports();
+
+            $this->featureSupportQuestions->push([
+                'supports' => $supports,
+                'category' => $category,
+              ]);
+        }
+    }
+
+    /**
+     * Generates a spread of browser support questions
+     *
+     * @return void
+     */
+    private function generateBrowserSupportSpread()
+    {
+        if ($this->questionTypeSpread[Question::TYPE_BROWSER] === 0) {
+            return;
+        }
+
         $preferentialTypeSpread = collect([
             Browser::TYPE_DESKTOP,
             Browser::TYPE_DESKTOP,
             Browser::TYPE_MOBILE,
         ]);
 
-        for ($i = 0; $i < $this->questionTypeSpread[Question::TYPE_FEATURE]; $i++) {
+        for ($i = 0; $i < $this->questionTypeSpread[Question::TYPE_BROWSER]; $i++) {
             $type = $preferentialTypeSpread->random();
             $supports = $this->getRandomSupports();
 
-            $this->featureSupportQuestions->push([
+            $this->browserSupportQuestions->push([
                 'supports' => $supports,
                 'type' => $type,
               ]);

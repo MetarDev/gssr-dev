@@ -11,6 +11,24 @@ export interface QuestionInterface {
   subject_id: number,
   correct_answer_id: number,
   answers: AnswerInterface[],
+  browserSupportData?: {
+		isSupported: boolean,
+		browserType: RealBrowserType,
+		featureShortName: string,
+		featureFullName: string,
+	},
+	featureSupportData?: {
+		isSupported: boolean,
+		featureType: string,
+		browserName: string,
+		browserVersion: string,
+		browserYear: number,
+	},
+	globalUsageData?: {
+		isMostUsed: boolean,
+		featureType: string,
+		fullFeatureName: string,
+	},
 }
 
 export interface AnswerInterface {
@@ -23,3 +41,5 @@ export interface AnswerInterface {
 		globalUsage: number,
 	}
 }
+
+export type RealBrowserType = 'desktop' | 'mobile';

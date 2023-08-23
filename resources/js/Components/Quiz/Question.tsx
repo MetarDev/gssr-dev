@@ -3,6 +3,7 @@ import { Button, Flex, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
 import { AnswerInterface, QuestionInterface } from "@/types/quiz";
 
 const Question = ({
+  children,
 	question: {
     answers
   },
@@ -11,8 +12,8 @@ const Question = ({
 	onAnswer = (answer: AnswerInterface) => {},
 	onNextQuestion,
 }: {
+  children: React.ReactNode;
 	question: QuestionInterface;
-	answers: AnswerInterface[];
 	isCurrentQuestionAnswered: boolean;
 	subtitle: string;
 	onAnswer?: (answer: AnswerInterface) => void;
@@ -22,6 +23,7 @@ const Question = ({
 		<Heading as="h2" textColor={"gray.500"} size="sm" marginBottom={2}>
 			{subtitle}
 		</Heading>
+    {children}
 		<Flex gap={4} flexDirection={"column"} justifyContent="space-between">
 			{answers.map((answer, index) => (
 				<div key={answer.title}>

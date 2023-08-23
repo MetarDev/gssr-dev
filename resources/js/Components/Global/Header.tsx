@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
-import { Box, Container, Flex, useColorMode } from "@chakra-ui/react";
+import { Container, Flex, Text, useColorMode } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { Link } from "@inertiajs/react";
+import { Logo } from "./Logo";
 
 export const Header = () => {
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -24,7 +25,12 @@ export const Header = () => {
 				}}
 			>
 				<Flex justifyContent={"space-between"} alignItems={"center"}>
-					<Link href="/">Support Guesser</Link>
+					<Link href="/">
+            <Flex alignItems={"center"}>
+              <Logo />
+              <Text marginLeft={4}>GUESS.DEV</Text>
+            </Flex>
+          </Link>
 					<ColorModeSwitcher />
 				</Flex>
 			</Container>

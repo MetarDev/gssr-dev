@@ -48,6 +48,11 @@ class QuizGenerator
      */
     public function generateRandom(int $howManyQuizzes, int $timer, bool $isDryRun): array
     {
+        \Illuminate\Support\Facades\Log::info(print_r([
+            'howManyQuizzes' => $howManyQuizzes,
+            'timer' => $timer,
+            'isDryRun' => $isDryRun,
+        ], true));
         // Based on $howManyQuizzes, create a spread of quizzes to generate based on type and support.
         $answersCount = Question::DEFAULT_ANSWER_COUNT;
         $quizzes = collect([]);
@@ -56,6 +61,8 @@ class QuizGenerator
             $quizOverview->initialize();
             $quizzes->push($quizOverview);
         }
+
+        \Illuminate\Support\Facades\Log::info(print_r($quizOverview, true));
 
         // Generate quiz and questions for each quiz.
         DB::beginTransaction();
@@ -70,7 +77,7 @@ class QuizGenerator
             $browser_start = microtime(true);
             $quizOverview->browserSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
                 $questions->push($this->questionGenerator->generateBrowserSupportQuestion(
-                    $params['category'],
+                    $params['type'],
                     $params['supports'],
                     $answersCount,
                 ));
@@ -81,7 +88,7 @@ class QuizGenerator
             $feature_start = microtime(true);
             $quizOverview->featureSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
                 $questions->push($this->questionGenerator->generateFeatureSupportQuestion(
-                    $params['type'],
+                    $params['category'],
                     $params['supports'],
                     $answersCount,
                 ));

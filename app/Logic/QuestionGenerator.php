@@ -59,22 +59,13 @@ class QuestionGenerator
     }
 
     /**
-     * Generate the "Which browser does / doesn't support this feature?" questions.
-     */
-    public function generateFeatureSupportQuestions()
-    {
-        // Get 1 random feature using Eloquent
-        $feature = Feature::inRandomOrder()->first();
-    }
-
-    /**
-     * Creates a single browser support question.
+     * Creates a single feature support question.
      *
      * @param string $category
      * @param string $supports
      * @return Question|null
      */
-    public function generateBrowserSupportQuestion(string $category, string $supports, int $answerCount): Question|null
+    public function generateFeatureSupportQuestion(string $category, string $supports, int $answerCount): Question|null
     {
         $counter = 0;
         do {
@@ -92,18 +83,18 @@ class QuestionGenerator
         $correctAnswerId = $supports === Question::SUPPORTED ? $supportedFeatureIds->random() : $unsupportedFeatureIds->random();
         $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedFeatureIds->random($answerCount - 1)->toArray() : $supportedFeatureIds->random($answerCount - 1)->toArray();
 
-        $question = $this->generateQuestion(Question::TYPE_BROWSER, $supports, $incorrectAnswers, $correctAnswerId, $browser->id);
+        $question = $this->generateQuestion(Question::TYPE_FEATURE, $supports, $incorrectAnswers, $correctAnswerId, $browser->id);
         return $question;
     }
 
     /**
-     * Creates a single feature support question.
+     * Creates a single browser support question.
      *
      * @param string $browserType
      * @param string $supports
      * @return Question|null
      */
-    public function generateFeatureSupportQuestion(string $browserType, string $supports, int $answerCount): mixed
+    public function generateBrowserSupportQuestion(string $browserType, string $supports, int $answerCount): mixed
     {
         $counter = 0;
         do {
@@ -121,7 +112,7 @@ class QuestionGenerator
         $correctAnswerId = $supports === Question::SUPPORTED ? $supportedBrowserIds->random() : $unsupportedBrowserIds->random();
         $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedBrowserIds->random($answerCount - 1)->toArray() : $supportedBrowserIds->random($answerCount - 1)->toArray();
 
-        return $this->generateQuestion(Question::TYPE_FEATURE, $supports, $incorrectAnswers, $correctAnswerId, $feature->id);
+        return $this->generateQuestion(Question::TYPE_BROWSER, $supports, $incorrectAnswers, $correctAnswerId, $feature->id);
     }
 
     /**
@@ -158,68 +149,6 @@ class QuestionGenerator
     }
 
     /**
-     * Generate the "Which feature is / isn't supported by this browser?" questions.
-     *
-     * @return int Total number of questions generated.
-     */
-    public function generateBrowserSupportQuestions(bool $isDryRun = false): int
-    {
-        // Foreach browser, get all supported and unsupported features
-        $totalQuestions = 0;
-        $this->getAllUsedBrowsers()->each(function (Browser $browser) use (&$totalQuestions, $isDryRun) {
-
-            foreach (Feature::getAllCategories() as $category) {
-                $supportedFeatures = $browser->supported_features->filter(fn(Feature $feature) => $feature->primary_category === $category || $feature->secondary_category === $category)->pluck('id')->toArray();
-                $unsupportedFeatures = $browser->unsupported_features->filter(fn(Feature $feature) => $feature->primary_category === $category || $feature->secondary_category === $category)->pluck('id')->toArray();
-
-                // Foreach supported feature, generate a question
-                DB::beginTransaction();
-
-                foreach ($supportedFeatures as $correctAnswerId) {
-                    foreach ($this->featureController->getAllIncorrectAnswerCombinations($unsupportedFeatures) as $incorrectAnswers) {
-                        $this->generateQuestion(
-                            Question::TYPE_BROWSER,
-                            Question::SUPPORTED,
-                            $incorrectAnswers,
-                            $correctAnswerId,
-                            $browser->id,
-                        );
-                        $totalQuestions++;
-                    }
-                }
-
-                foreach ($unsupportedFeatures as $correctAnswerId) {
-                    foreach ($this->featureController->getAllIncorrectAnswerCombinations($supportedFeatures) as $incorrectAnswers) {
-                        $this->generateQuestion(
-                            Question::TYPE_BROWSER,
-                            Question::NOT_SUPPORTED,
-                            $incorrectAnswers,
-                            $correctAnswerId,
-                            $browser->id,
-                        );
-                        $totalQuestions++;
-                    }
-                }
-
-                if (!$isDryRun) {
-                    DB::commit();
-                } else {
-                    DB::rollBack();
-                }
-            }
-        });
-
-        return $totalQuestions;
-    }
-
-    /**
-     * Generate "Which is feature is most / least universally supported?" questions.
-     */
-    public function generateGlobalSupportQuestions()
-    {
-    }
-
-    /**
      * Generates a single question.
      *
      * @param string $type
@@ -253,6 +182,8 @@ class QuestionGenerator
                 'hash' => $hash,
             ]
         );
+
+        \Illuminate\Support\Facades\Log::info(print_r($question, true));
 
         return $question;
     }

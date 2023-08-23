@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Question extends Model
 {
@@ -35,4 +36,42 @@ class Question extends Model
     protected $casts = [
         'answers' => 'array',
     ];
+
+    /**
+     * Returns either a Feature model or a Browser model depending on questions type
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function subject(): BelongsTo
+    {
+        switch ($this->type) {
+            case self::TYPE_FEATURE:
+                return $this->belongsTo(Browser::class, 'subject_id');
+            case self::TYPE_BROWSER:
+                return $this->belongsTo(Feature::class, 'subject_id');
+            case self::TYPE_GLOBAL:
+                return $this->belongsTo(Feature::class, 'subject_id');
+            default:
+                throw new \Exception('Invalid question type');
+        }
+    }
+
+    /**
+     * Returns either a Feature model or a Browser model depending on questions type
+     *
+     * @return string
+     */
+    public function correctAnswer(): BelongsTo
+    {
+        switch ($this->type) {
+            case self::TYPE_FEATURE:
+                return $this->belongsTo(Feature::class, 'correct_answer_id');
+            case self::TYPE_GLOBAL:
+                return $this->belongsTo(Feature::class, 'correct_answer_id');
+            case self::TYPE_BROWSER:
+                return $this->belongsTo(Browser::class, 'correct_answer_id');
+            default:
+                throw new \Exception('Invalid question type');
+        }
+    }
 }

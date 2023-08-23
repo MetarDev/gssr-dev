@@ -37,23 +37,71 @@ class QuestionController extends Controller
      */
     public function buildQuestionsForQuiz(Quiz $quiz): Collection
     {
-        $questions = Question::whereIn('id', $quiz->questions)->get();
-
-        $questions = $questions->map(function ($question) {
-            $question->answers = $this->answerController
-                ->buildAnswersForQuestion($question->answers, $this->getAnswerModelClass($question))
-                ->map(function ($answer) use (&$question) {
-                    if ($answer->id === $question->correct_answer_id) {
-                        $answer->isCorrect = true;
-                    }
-                    return $answer;
-                });
-
-            return $question;
-        });
-
         // Create answers from browsers / features specific to the quiz
-        return $questions;
+        return Question::whereIn('id', $quiz->questions)
+            ->get()
+            ->map([$this, 'buildAnswersForQuestion'])
+            ->map([$this, 'addQuestionTypeData']);
+    }
+
+    /**
+     * Builds answer models for the each question.
+     *
+     * @param Collection $answers
+     * @param string $answerModelClass
+     * @return Collection
+     */
+    public function buildAnswersForQuestion(Question $question): Question
+    {
+        $question->answers = $this->answerController
+            ->buildAnswersForQuestion($question->answers, $this->getAnswerModelClass($question))
+            ->map(function ($answer) use (&$question) {
+                if ($answer->id === $question->correct_answer_id) {
+                    $answer->isCorrect = true;
+                }
+                return $answer;
+            });
+
+        return $question;
+    }
+
+    /**
+     * Adds appropriate data for each question type.
+     *
+     * @param Question $question
+     * @return Question
+     */
+    public function addQuestionTypeData(Question $question): Question
+    {
+        \Illuminate\Support\Facades\Log::info(print_r($question->correctAnswer, true));
+        \Illuminate\Support\Facades\Log::info(print_r($question->subject, true));
+        switch ($question->type) {
+            case Question::TYPE_FEATURE:
+                $question->featureSupportData = [
+                    'isSupported' => $question->supports === Question::SUPPORTED,
+                    'featureType' => $question->correctAnswer->type,
+                    'browserName' => $question->subject->name,
+                    'browserVersion' => $question->subject->version,
+                    'browserYear' => $question->subject->year,
+                ];
+                break;
+            case Question::TYPE_BROWSER:
+                $question->browserSupportData = [
+                    'isSupported' => $question->supports === Question::SUPPORTED,
+                    'browserType' => $question->subject->type,
+                    'featureShortName' => $question->feature_short_name,
+                    'featureFullName' => $question->feature_full_name,
+                ];
+                break;
+            case Question::TYPE_GLOBAL:
+                $question->globalUsageData = [
+                    'isMostUsed' => $question->supports === Question::SUPPORTED,
+                    'featureType' => $question->correctAnswer->type,
+                    'fullFeatureName' => $question->feature_full_name,
+                ];
+                break;
+        }
+        return $question;
     }
 
     /**
@@ -79,10 +127,15 @@ class QuestionController extends Controller
      */
     private function getAnswerModelClass(Question $question)
     {
-        if ($question->type === Question::TYPE_FEATURE) {
-            return Browser::class;
-        } else {
-            return Feature::class;
+        switch ($question->type) {
+            case Question::TYPE_FEATURE:
+                return Feature::class;
+            case Question::TYPE_BROWSER:
+                return Browser::class;
+            case Question::TYPE_GLOBAL:
+                return Feature::class;
+            default:
+                throw new \Exception('Invalid question type');
         }
     }
 }

@@ -48,7 +48,7 @@ class GenerateQuestions extends Command
         $isDryRun = $this->option('dry-run');
         $timeStart = microtime(true);
         $this->info(sprintf('Starting question generation %s', $isDryRun ? '(dry run)' : ''));
-        $createdQuestion = $this->questionGenerator->generateBrowserSupportQuestions($isDryRun);
+        // $createdQuestion = $this->questionGenerator->generateBrowserSupportQuestions($isDryRun);
 
         $end = round(microtime(true) - $timeStart, 5);
         $this->info("$createdQuestion questions created in {$end}s");
