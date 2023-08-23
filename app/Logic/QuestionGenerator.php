@@ -183,8 +183,6 @@ class QuestionGenerator
             ]
         );
 
-        \Illuminate\Support\Facades\Log::info(print_r($question, true));
-
         return $question;
     }
 

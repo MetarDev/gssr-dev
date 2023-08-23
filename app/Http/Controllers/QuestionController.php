@@ -73,8 +73,6 @@ class QuestionController extends Controller
      */
     public function addQuestionTypeData(Question $question): Question
     {
-        \Illuminate\Support\Facades\Log::info(print_r($question->correctAnswer, true));
-        \Illuminate\Support\Facades\Log::info(print_r($question->subject, true));
         switch ($question->type) {
             case Question::TYPE_FEATURE:
                 $question->featureSupportData = [
@@ -88,9 +86,9 @@ class QuestionController extends Controller
             case Question::TYPE_BROWSER:
                 $question->browserSupportData = [
                     'isSupported' => $question->supports === Question::SUPPORTED,
-                    'browserType' => $question->subject->type,
-                    'featureShortName' => $question->feature_short_name,
-                    'featureFullName' => $question->feature_full_name,
+                    'browserType' => $question->correctAnswer->type,
+                    'featureShortName' => $question->subject->title,
+                    'featureFullName' => $question->subject->title,
                 ];
                 break;
             case Question::TYPE_GLOBAL:

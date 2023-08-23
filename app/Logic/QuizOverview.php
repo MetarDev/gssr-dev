@@ -152,14 +152,11 @@ class QuizOverview
             return;
         }
 
-        $preferentialTypeSpread = collect([
-            Browser::TYPE_DESKTOP,
-            Browser::TYPE_DESKTOP,
-            Browser::TYPE_MOBILE,
-        ]);
-
         for ($i = 0; $i < $this->questionTypeSpread[Question::TYPE_BROWSER]; $i++) {
-            $type = $preferentialTypeSpread->random();
+            // No real point in creating mobile questions for now as they only browsers with valid support data are
+            // iOS safari and Samsung browser (so at best you get 2 Samsung browsers and 2 iOS safari browsers as answers,
+            // and at worst 4 different versions of the same browser)
+            $type = Browser::TYPE_DESKTOP;
             $supports = $this->getRandomSupports();
 
             $this->browserSupportQuestions->push([
