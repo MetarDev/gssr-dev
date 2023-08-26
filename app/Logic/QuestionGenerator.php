@@ -99,20 +99,29 @@ class QuestionGenerator
         $counter = 0;
         do {
             $feature = $this->getAllRelevantFeatures()->random();
-            $supportedBrowserIds = $feature->getSupportedBrowsersByType($browserType);
-            $unsupportedBrowserIds = $feature->getUnsupportedBrowsersByType($browserType);
+            $supportedBrowsers = $feature->getSupportedBrowsersByType($browserType);
+            $unsupportedBrowsers = $feature->getUnsupportedBrowsersByType($browserType);
 
             if ($counter > self::MAX_GENERATE_QUESTIONS_LOOP) {
                 return null;
             }
+            // Probably needs a better method for generating questions but let's go with random for now.
+            $correctAnswer = $supports === Question::SUPPORTED ? $supportedBrowsers->random() : $unsupportedBrowsers->random();
+
+            // Group the incorrect answers by browser so we can make sure we don't have duplicate browsers in answers
+            $incorrectAnswersByBrowser = $supports === Question::SUPPORTED ?
+                $unsupportedBrowsers->filter(fn($browser) => $browser->abbr !== $correctAnswer->abbr)->groupBy('abbr') :
+                $supportedBrowsers->filter(fn($browser) => $browser->abbr !== $correctAnswer->abbr)->groupBy('abbr');
+
             $counter++;
-        } while (!$this->hasEnoughAnswers($supports, $supportedBrowserIds->count(), $unsupportedBrowserIds->count(), $answerCount));
+        } while (!$this->hasEnoughIncorrectGroups($incorrectAnswersByBrowser->count(), $answerCount));
 
-        // Probably needs a better method for generating questions but let's go with random for now.
-        $correctAnswerId = $supports === Question::SUPPORTED ? $supportedBrowserIds->random() : $unsupportedBrowserIds->random();
-        $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedBrowserIds->random($answerCount - 1)->toArray() : $supportedBrowserIds->random($answerCount - 1)->toArray();
+        // Get incorrect answers by making sure each answer is a different browser.
+        $incorrectAnswers = $incorrectAnswersByBrowser->shuffle()->take(3)->map(function ($browserGroup) {
+            return $browserGroup->random();
+        })->pluck('id')->toArray();
 
-        return $this->generateQuestion(Question::TYPE_BROWSER, $supports, $incorrectAnswers, $correctAnswerId, $feature->id);
+        return $this->generateQuestion(Question::TYPE_BROWSER, $supports, $incorrectAnswers, $correctAnswer->id, $feature->id);
     }
 
     /**
@@ -127,11 +136,11 @@ class QuestionGenerator
         $counter = 0;
         do {
             $features = Feature::where('primary_category', $category)
-                ->orWhere('secondary_category', $category)
-                ->inRandomOrder()
-                ->limit($answerCount)
-                ->get()
-                ->sortByDesc('usage_global');
+            ->orWhere('secondary_category', $category)
+            ->inRandomOrder()
+            ->limit($answerCount)
+            ->get()
+            ->sortByDesc('usage_global');
 
             if ($counter > self::MAX_GENERATE_QUESTIONS_LOOP) {
                 return null;
@@ -174,12 +183,12 @@ class QuestionGenerator
         $question = Question::updateOrCreate(
             [ 'hash' => $hash ],
             [
-                'type' => $type,
-                'supports' => $supports,
-                'subject_id' => $subjectId,
-                'correct_answer_id' => $correctAnswerId,
-                'answers' => $answers,
-                'hash' => $hash,
+            'type' => $type,
+            'supports' => $supports,
+            'subject_id' => $subjectId,
+            'correct_answer_id' => $correctAnswerId,
+            'answers' => $answers,
+            'hash' => $hash,
             ]
         );
 
@@ -230,6 +239,18 @@ class QuestionGenerator
         } else {
             return $supportedCount >= $expectedAnswerCount - 1 && $unsupportedCount >= 1;
         }
+    }
+
+    /**
+     * Check if quiz has enough incorrect groups to generate a question.
+     *
+     * @param int $incorrectGroupsCount
+     * @param int $expectedAnswerCount
+     * @return bool
+     */
+    private function hasEnoughIncorrectGroups(int $incorrectGroupsCount, int $expectedAnswerCount): bool
+    {
+        return $incorrectGroupsCount >= $expectedAnswerCount - 1;
     }
 
     /**
