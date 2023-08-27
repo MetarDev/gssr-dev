@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { AnswerInterface, QuestionInterface } from "@/types/quiz";
-import { InfoIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, ArrowRightIcon, InfoIcon } from "@chakra-ui/icons";
 
 const Question = ({
   children,
@@ -35,12 +35,13 @@ const Question = ({
     </Heading>
     {children}
     <Divider marginBottom={8} />
-    <SimpleGrid columns={{base: 1, lg: 2 }} spacing={8}>
+    <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8}>
       {answers.map((answer, index) => (
         <Flex key={answer.title} alignItems={"center"}>
           <Button
             flexGrow="1"
             flexShrink="50%"
+            padding={4}
             flexWrap={"wrap"}
             // flexShrink="50%"
             onClick={() => onAnswer(answer)}
@@ -68,11 +69,16 @@ const Question = ({
       ))}
     </SimpleGrid>
 
-    {isCurrentQuestionAnswered && (
-      <Button flexGrow="1" flexShrink="50%" onClick={onNextQuestion}>
-        Next Question
+    <Flex justifyContent={"flex-end"} marginTop={8}>
+      <Button
+        onClick={isCurrentQuestionAnswered ? onNextQuestion : () => {}}
+        disabled={isCurrentQuestionAnswered}
+        visibility={isCurrentQuestionAnswered ? "visible" : "hidden"}
+        colorScheme={"green"}
+      >
+        Next Question <ArrowForwardIcon marginLeft={2} />
       </Button>
-    )}
+    </Flex>
   </div>
 );
 
