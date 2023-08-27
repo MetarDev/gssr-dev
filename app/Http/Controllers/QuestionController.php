@@ -39,6 +39,7 @@ class QuestionController extends Controller
     {
         // Create answers from browsers / features specific to the quiz
         return Question::whereIn('id', $quiz->questions)
+            ->orderByRaw(sprintf('FIELD(id, %s)', implode(',', $quiz->questions)))
             ->get()
             ->map([$this, 'buildAnswersForQuestion'])
             ->map([$this, 'addQuestionTypeData']);
