@@ -15,6 +15,7 @@ import QuizSummary from "@/Components/Quiz/QuizSummary";
 import { QuestionInterface, Quiz } from "@/types/quiz";
 import Question from "@/Components/Quiz/Question";
 import QuestionTitle from "@/Components/Quiz/QuestionTitle";
+import AnswerPopup from "@/Components/Quiz/AnswerPopup";
 
 export default function QuizPage({
   auth,
@@ -31,15 +32,17 @@ export default function QuizPage({
   const {
     hasStarted,
     currentQuestion,
+    currentAnswer,
     isCurrentQuestionAnswered,
     currentQuestionIndex,
     numberOfQuestions,
+    isAnswerPopupOpen,
     startQuiz,
     onAnswer,
     onNextQuestion,
   } = useQuiz({ quiz, questions });
 
-  console.log({currentQuestion});
+  console.log(currentQuestion);
 
   return (
     <DefaultLayout justifyContent="center" title="Quiz">
@@ -59,6 +62,13 @@ export default function QuizPage({
           <QuestionTitle question={currentQuestion} />
         </Question>
       )}
+
+      <AnswerPopup
+        question={currentQuestion}
+        answer={currentAnswer}
+        isOpen={isAnswerPopupOpen}
+        onClose={onNextQuestion}
+      />
     </DefaultLayout>
   );
 }

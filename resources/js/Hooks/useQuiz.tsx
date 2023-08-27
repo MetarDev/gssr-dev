@@ -11,10 +11,12 @@ export const useQuiz = ({
   const [hasStarted, setHasStarted] = useState(false);
   const [isCurrentQuestionAnswered, setIsCurrentQuestionAnswered] =
     useState(false);
+  const [isAnswerPopupOpen, setIsAnswerPopupOpen] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState<QuestionInterface>(
     questions[0]
   );
+  const [currentAnswer, setCurrentAnswer] = useState<AnswerInterface | null>(null);
 
   /**
    * Callback when user starts the quiz.
@@ -62,6 +64,9 @@ export const useQuiz = ({
       ...currentQuestion,
       answers: highlightedAnswers,
     });
+
+    setCurrentAnswer(answer);
+    setIsAnswerPopupOpen(true);
   };
 
   /**
@@ -74,13 +79,17 @@ export const useQuiz = ({
     setIsCurrentQuestionAnswered(false);
     setCurrentQuestionIndex(newIndex);
     setCurrentQuestion(questions[newIndex]);
+    setCurrentAnswer(null);
+    setIsAnswerPopupOpen(false);
   };
 
   return {
     currentQuestion,
+    currentAnswer,
     hasStarted,
     isCurrentQuestionAnswered,
     currentQuestionIndex,
+    isAnswerPopupOpen,
     numberOfQuestions: questions.length,
     startQuiz,
     onAnswer,

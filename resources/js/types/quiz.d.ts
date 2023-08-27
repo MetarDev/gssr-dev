@@ -34,6 +34,7 @@ export interface QuestionInterface {
 export interface AnswerInterface {
 	id: number,
 	title: string,
+	titleLong: string,
 	description?: string,
 	isCorrect: boolean,
 	isHighlighted: boolean,

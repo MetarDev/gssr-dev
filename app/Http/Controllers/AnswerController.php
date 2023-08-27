@@ -34,14 +34,17 @@ class AnswerController extends Controller
         $isBrowser = $model instanceof Browser;
         if ($isBrowser) {
             $title = "$model->title ($model->version)";
+            $titleLong = $model->title;
             $description = "$model->long_name ($model->version)";
         } else {
-            $title = $model->title;
+            $title = $model->short_title;
+            $titleLong = $model->title;
             $description = $model->description;
         }
         return Answer::make([
             'id' => $model->id,
             'title' => $title,
+            'titleLong' => $titleLong,
             'description' => $description,
             'isCorrect' => false, // This is set later
             'globalUsageData' => [
