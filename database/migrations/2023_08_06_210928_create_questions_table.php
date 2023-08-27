@@ -24,6 +24,7 @@ return new class extends Migration
                 Question::SUPPORTED,
                 Question::NOT_SUPPORTED
             ]);
+            $table->string('subject_type');
             $table->string('hash')->unique();
             $table->foreignId('subject_id')->nullable(); // Feature or Browser model ID, based on question's type
             $table->foreignId('correct_answer_id');

@@ -14,9 +14,6 @@ const QuestionTitle = ({
 		globalUsageData,
 	} = question;
 
-	// Which of the following ${realFeatureType.toUpperCase()} features IS ${isSupported ? '' : 'NOT '} supported by ${agents[browser].browser} ${version} (${browserYear})?
-	// title: `Which of the following ${realBrowserType} browsers ${isSupported ? 'SUPPORTS' : 'DOESN\'T SUPPORT '} <code>${feature}</code> (${data[feature].title})?`,
-
   console.log({
     type: question.type,
   })
@@ -30,7 +27,7 @@ const QuestionTitle = ({
 
 			return (
 				<Heading as="h1" marginBottom={6}>
-					Which of the following {featureSupportData.featureType.toUpperCase()} features is {featureSupportData.isSupported ? '' : ' NOT '} supported by {featureSupportData.browserName} {featureSupportData.browserVersion}
+					Which {featureSupportData.subjectType.toUpperCase()} feature {featureSupportData.isSupported ? 'IS' : 'IS NOT '} supported by {featureSupportData.browserName} {featureSupportData.browserVersion} ({featureSupportData.browserYear})
 				</Heading>
 			);
 		case "browser_support":
@@ -40,7 +37,7 @@ const QuestionTitle = ({
 
 			return (
 				<Heading as="h1" marginBottom={6}>
-					Which of the following {browserSupportData.browserType} browsers {browserSupportData.isSupported ? 'SUPPORTS' : 'DOESN\'T SUPPORT '} {browserSupportData.featureShortName} {`(${browserSupportData.featureFullName})`}
+					Which {browserSupportData.subjectType} browser {browserSupportData.isSupported ? 'SUPPORTS' : 'DOES NOT SUPPORT'} {browserSupportData.featureShortName} {`(${browserSupportData.featureFullName})`}
 				</Heading>
 			);
 		case "usage_global":
@@ -50,7 +47,7 @@ const QuestionTitle = ({
 
 			return (
 				<Heading as="h1" marginBottom={6}>
-					Which feature is {globalUsageData.isMostUsed ? 'MOST' : 'LEAST'} globally supported?
+					Which {globalUsageData.subjectType.toUpperCase()} feature is {globalUsageData.isMostUsed ? 'MOST' : 'LEAST'} globally supported?
 				</Heading>
 			);
 		default:

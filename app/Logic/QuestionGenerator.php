@@ -83,7 +83,14 @@ class QuestionGenerator
         $correctAnswerId = $supports === Question::SUPPORTED ? $supportedFeatureIds->random() : $unsupportedFeatureIds->random();
         $incorrectAnswers = $supports === Question::SUPPORTED ? $unsupportedFeatureIds->random($answerCount - 1)->toArray() : $supportedFeatureIds->random($answerCount - 1)->toArray();
 
-        $question = $this->generateQuestion(Question::TYPE_FEATURE, $supports, $incorrectAnswers, $correctAnswerId, $browser->id);
+        $question = $this->generateQuestion(
+            Question::TYPE_FEATURE,
+            $supports,
+            $category,
+            $incorrectAnswers,
+            $correctAnswerId,
+            $browser->id
+        );
         return $question;
     }
 
@@ -121,7 +128,14 @@ class QuestionGenerator
             return $browserGroup->random();
         })->pluck('id')->toArray();
 
-        return $this->generateQuestion(Question::TYPE_BROWSER, $supports, $incorrectAnswers, $correctAnswer->id, $feature->id);
+        return $this->generateQuestion(
+            Question::TYPE_BROWSER,
+            $supports,
+            $browserType,
+            $incorrectAnswers,
+            $correctAnswer->id,
+            $feature->id
+        );
     }
 
     /**
@@ -136,11 +150,11 @@ class QuestionGenerator
         $counter = 0;
         do {
             $features = Feature::where('primary_category', $category)
-            ->orWhere('secondary_category', $category)
-            ->inRandomOrder()
-            ->limit($answerCount)
-            ->get()
-            ->sortByDesc('usage_global');
+                ->orWhere('secondary_category', $category)
+                ->inRandomOrder()
+                ->limit($answerCount)
+                ->get()
+                ->sortByDesc('usage_global');
 
             if ($counter > self::MAX_GENERATE_QUESTIONS_LOOP) {
                 return null;
@@ -153,7 +167,13 @@ class QuestionGenerator
         $correctAnswerId = $supports === Question::SUPPORTED ? $features->first()->id : $features->last()->id;
         $incorrectAnswers = $supports === Question::SUPPORTED ? $features->slice(1)->pluck('id')->toArray() : $features->slice(0, -1)->pluck('id')->toArray();
 
-        $question = $this->generateQuestion(Question::TYPE_GLOBAL, $supports, $incorrectAnswers, $correctAnswerId);
+        $question = $this->generateQuestion(
+            Question::TYPE_GLOBAL,
+            $supports,
+            $category,
+            $incorrectAnswers,
+            $correctAnswerId
+        );
         return $question;
     }
 
@@ -162,6 +182,7 @@ class QuestionGenerator
      *
      * @param string $type
      * @param string $supports
+     * @param string $subjectType
      * @param array $incorrectAnswers
      * @param integer $correctAnswerId
      * @param integer|null $subjectId
@@ -170,6 +191,7 @@ class QuestionGenerator
     private function generateQuestion(
         string $type,
         string $supports,
+        string $subjectType,
         array $incorrectAnswers,
         int $correctAnswerId,
         int|null $subjectId = null,
@@ -183,12 +205,13 @@ class QuestionGenerator
         $question = Question::updateOrCreate(
             [ 'hash' => $hash ],
             [
-            'type' => $type,
-            'supports' => $supports,
-            'subject_id' => $subjectId,
-            'correct_answer_id' => $correctAnswerId,
-            'answers' => $answers,
-            'hash' => $hash,
+                'type' => $type,
+                'supports' => $supports,
+                'subject_type' => $subjectType,
+                'subject_id' => $subjectId,
+                'correct_answer_id' => $correctAnswerId,
+                'answers' => $answers,
+                'hash' => $hash,
             ]
         );
 

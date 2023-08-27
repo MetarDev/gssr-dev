@@ -78,8 +78,8 @@ class QuestionController extends Controller
             case Question::TYPE_FEATURE:
                 $question->featureSupportData = [
                     'isSupported' => $question->supports === Question::SUPPORTED,
-                    'featureType' => $question->correctAnswer->type,
-                    'browserName' => $question->subject->name,
+                    'subjectType' => $question->subject_type,
+                    'browserName' => $question->subject->title,
                     'browserVersion' => $question->subject->version,
                     'browserYear' => $question->subject->year,
                 ];
@@ -87,15 +87,15 @@ class QuestionController extends Controller
             case Question::TYPE_BROWSER:
                 $question->browserSupportData = [
                     'isSupported' => $question->supports === Question::SUPPORTED,
-                    'browserType' => $question->correctAnswer->type,
-                    'featureShortName' => $question->subject->title,
+                    'subjectType' => $question->subject_type,
+                    'featureShortName' => $question->subject->short_title,
                     'featureFullName' => $question->subject->title,
                 ];
                 break;
             case Question::TYPE_GLOBAL:
                 $question->globalUsageData = [
                     'isMostUsed' => $question->supports === Question::SUPPORTED,
-                    'featureType' => $question->correctAnswer->type,
+                    'subjectType' => $question->subject_type,
                     'fullFeatureName' => $question->feature_full_name,
                 ];
                 break;

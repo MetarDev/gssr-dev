@@ -27,7 +27,6 @@ export default function QuizPage({
   questions: QuestionInterface[];
   url: string;
 }>) {
-  console.log({ questions });
 
   const {
     hasStarted,
@@ -39,6 +38,8 @@ export default function QuizPage({
     onAnswer,
     onNextQuestion,
   } = useQuiz({ quiz, questions });
+
+  console.log({currentQuestion});
 
   return (
     <DefaultLayout justifyContent="center" title="Quiz">

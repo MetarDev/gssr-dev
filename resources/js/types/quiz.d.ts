@@ -13,20 +13,20 @@ export interface QuestionInterface {
   answers: AnswerInterface[],
   browserSupportData?: {
 		isSupported: boolean,
-		browserType: RealBrowserType,
+		subjectType: string,
 		featureShortName: string,
 		featureFullName: string,
 	},
 	featureSupportData?: {
 		isSupported: boolean,
-		featureType: string,
+		subjectType: string,
 		browserName: string,
 		browserVersion: string,
 		browserYear: number,
 	},
 	globalUsageData?: {
 		isMostUsed: boolean,
-		featureType: string,
+		subjectType: string,
 		fullFeatureName: string,
 	},
 }
