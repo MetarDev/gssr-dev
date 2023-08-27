@@ -40,6 +40,7 @@ export default function QuizPage({
     startQuiz,
     onAnswer,
     onNextQuestion,
+    onTimeout,
   } = useQuiz({ quiz, questions });
 
   console.log(currentQuestion);
@@ -51,6 +52,7 @@ export default function QuizPage({
       )}
       {hasStarted && (
         <Question
+          timer={quiz.timer}
           subtitle={`Question ${
             currentQuestionIndex + 1
           } of ${numberOfQuestions}`}
@@ -58,6 +60,7 @@ export default function QuizPage({
           question={currentQuestion}
           onAnswer={onAnswer}
           onNextQuestion={onNextQuestion}
+          onTimeout={onTimeout}
         >
           <QuestionTitle question={currentQuestion} />
         </Question>

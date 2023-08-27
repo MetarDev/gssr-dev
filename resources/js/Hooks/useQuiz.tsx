@@ -1,5 +1,5 @@
 import { AnswerInterface, QuestionInterface, QuestionSummaryInterface, Quiz, QuizSummary } from "@/types/quiz";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useQuiz = ({
   quiz,
@@ -77,6 +77,15 @@ export const useQuiz = ({
     setIsAnswerPopupOpen(false);
   };
 
+  /**
+   * Callback when the timer runs out.
+   *
+   * @return void
+   */
+  const onTimeout = () => {
+    console.log('timeout');
+  };
+
   return {
     currentQuestion,
     currentAnswer,
@@ -90,5 +99,6 @@ export const useQuiz = ({
     startQuiz,
     onAnswer,
     onNextQuestion,
+    onTimeout,
   };
 };

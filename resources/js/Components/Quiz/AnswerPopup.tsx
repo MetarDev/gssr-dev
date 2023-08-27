@@ -86,7 +86,7 @@ const AnswerPopup = ({
       >
         <ModalHeader padding={8} fontSize={28}>
           <Flex alignItems={"center"}>
-            <Text as="span" marginRight={4}>
+            <Text as="span" marginRight={4} flexWrap="wrap">
               Your answer is:{" "}
             </Text>
             {isAnswerRevealed && (

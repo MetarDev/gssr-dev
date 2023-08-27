@@ -20,10 +20,7 @@ import { StyledCard } from "../StyledCard";
 import CopyToClipboard from "../CopyToClipboard";
 
 export default function QuizSummary({
-  quiz: {
-    timer,
-    questions,
-  },
+  quiz: { timer, questions },
   url,
   onStartQuiz,
 }: {
@@ -52,19 +49,25 @@ export default function QuizSummary({
                 <Td>{questions.length}</Td>
               </Tr>
               <Tr>
-                <Td>URL:</Td>
                 <Td>
-                  <Flex alignItems={'center'} justifyContent={"space-between"}>
-                    <Text>{url}</Text>
-                    <CopyToClipboard toCopy={url} />
-                  </Flex>
+                  URL: <CopyToClipboard toCopy={url} />
+                </Td>
+                <Td>
+                  <Text>{url}</Text>
                 </Td>
               </Tr>
             </Tbody>
           </Table>
         </TableContainer>
 
-        <Button colorScheme="green" alignSelf={"flex-end"} marginTop={"8"} onClick={onStartQuiz}>Start quiz!</Button>
+        <Button
+          colorScheme="green"
+          alignSelf={"flex-end"}
+          marginTop={"8"}
+          onClick={onStartQuiz}
+        >
+          Start quiz!
+        </Button>
       </StyledCard>
     </VStack>
   );
