@@ -32,7 +32,7 @@ export interface QuestionInterface {
 }
 
 export interface AnswerInterface {
-	id: string,
+	id: number,
 	title: string,
 	description?: string,
 	isCorrect: boolean,
