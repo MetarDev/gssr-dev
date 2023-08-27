@@ -38,7 +38,7 @@ const QuestionTitle = ({
 
 			return (
 				<Heading as="h1" marginBottom={6}>
-					Which {browserSupportData.subjectType} browser <HighlightSupports condition={browserSupportData.isSupported} supportsText="SUPPORTS" notSupportsText="DOES NOT SUPPORT" /><Code style={{ fontSize: "inherit"}}>{browserSupportData.featureShortName}</Code> {`(${browserSupportData.featureFullName})`}
+					Which {browserSupportData.subjectType} browser <HighlightSupports condition={browserSupportData.isSupported} supportsText="SUPPORTS" notSupportsText="DOES NOT SUPPORT" /> <Code style={{ fontSize: "inherit"}}>{browserSupportData.featureShortName}</Code> {`(${browserSupportData.featureFullName})`}
 				</Heading>
 			);
 		case "usage_global":
@@ -48,7 +48,7 @@ const QuestionTitle = ({
 
 			return (
 				<Heading as="h1" marginBottom={6}>
-					Which {globalUsageData.subjectType.toUpperCase()} feature is <HighlightSupports icons="up-down" condition={globalUsageData.isMostUsed} supportsText="MOST" notSupportsText="LEAST" /> globally supported?
+					Which {globalUsageData.subjectType.toUpperCase()} feature is <HighlightSupports condition={globalUsageData.isMostUsed} supportsText="MOST" notSupportsText="LEAST" /> globally supported?
 				</Heading>
 			);
 		default:
