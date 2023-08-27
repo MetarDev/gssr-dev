@@ -80,7 +80,10 @@ const AnswerPopup = ({
       closeOnOverlayClick={false}
     >
       <ModalOverlay />
-      <ModalContent backgroundColor={colorMode === 'dark' ? 'gray.800' : 'gray.200'} margin={'auto'}>
+      <ModalContent
+        backgroundColor={colorMode === "dark" ? "gray.800" : "gray.200"}
+        margin={"auto"}
+      >
         <ModalHeader padding={8} fontSize={28}>
           <Flex alignItems={"center"}>
             <Text as="span" marginRight={4}>
@@ -133,7 +136,14 @@ const AnswerPopup = ({
         </ModalBody>
         <ModalFooter marginTop={8}>
           <Button
-            onClick={isAnswerRevealed ? () => {onClose(); reset();}: () => {}}
+            onClick={
+              isAnswerRevealed
+                ? () => {
+                    onClose();
+                    reset();
+                  }
+                : () => {}
+            }
             colorScheme={isAnswerRevealed ? "green" : "gray"}
             disabled={!isAnswerRevealed}
           >
