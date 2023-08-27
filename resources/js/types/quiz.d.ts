@@ -37,10 +37,20 @@ export interface AnswerInterface {
 	titleLong: string,
 	description?: string,
 	isCorrect: boolean,
-	isHighlighted: boolean,
 	globalUsageData?: {
 		globalUsage: number,
 	}
+}
+
+export interface QuizSummary {
+  score: number;
+  questions: QuestionSummaryInterface[]
+}
+
+export interface QuestionSummaryInterface {
+  timeSpent: number;
+  score: number;
+  answeredCorrectly: boolean;
 }
 
 export type RealBrowserType = 'desktop' | 'mobile';

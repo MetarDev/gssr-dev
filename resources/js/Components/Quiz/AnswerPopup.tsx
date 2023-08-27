@@ -3,16 +3,14 @@ import { ArrowForwardIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   Button,
   Code,
-  Heading,
-  List,
-  ListItem,
+  Flex,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Progress,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -27,14 +25,17 @@ import { useEffect, useState } from "react";
 const AnswerPopup = ({
   question,
   answer,
+  timeSpent,
   isOpen,
   onClose,
 }: {
   question: QuestionInterface;
   answer: AnswerInterface;
+  timeSpent: number;
   isOpen: boolean;
   onClose: () => void;
 }) => {
+  const { colorMode } = useColorMode();
   const [counter, setCounter] = useState(0);
   const [countInterval, setCountInterval] = useState<NodeJS.Timer | null>(null);
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
@@ -59,9 +60,13 @@ const AnswerPopup = ({
     };
   }, [isOpen, counter]);
 
-  console.log({ isOpen, answer, counter });
+  const reset = () => {
+    setCounter(0);
+    setIsAnswerRevealed(false);
+  };
 
-  const correctAnswerTitle = question.answers.find((a) => a.isCorrect)?.title || "";
+  const correctAnswerTitle =
+    question.answers.find((a) => a.isCorrect)?.title || "";
 
   if (!answer) {
     return null;
@@ -75,29 +80,24 @@ const AnswerPopup = ({
       closeOnOverlayClick={false}
     >
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
-          <Text as="span" marginRight={2}>
-            Your answer is:{" "}
-          </Text>
-          {isAnswerRevealed && (
-            <HighlightText colorScheme={answer.isCorrect ? "green" : "red"}>
-              {answer.isCorrect ? (
-                <CheckIcon marginRight={1} />
-              ) : (
-                <CloseIcon boxSize={3} marginRight={1} />
-              )}
-              {answer.isCorrect ? "Correct" : "Incorrect"}
-            </HighlightText>
-          )}
-          {!isAnswerRevealed && (
-            <Progress
-              size="xs"
-              value={counter * 33}
-              colorScheme="orange"
-              isIndeterminate
-            />
-          )}
+      <ModalContent backgroundColor={colorMode === 'dark' ? 'gray.800' : 'gray.200'} margin={'auto'}>
+        <ModalHeader padding={8} fontSize={28}>
+          <Flex alignItems={"center"}>
+            <Text as="span" marginRight={4}>
+              Your answer is:{" "}
+            </Text>
+            {isAnswerRevealed && (
+              <HighlightText colorScheme={answer.isCorrect ? "green" : "red"}>
+                {answer.isCorrect ? (
+                  <CheckIcon boxSize={6} marginRight={1} />
+                ) : (
+                  <CloseIcon boxSize={4} marginRight={1} />
+                )}
+                {answer.isCorrect ? "Correct" : "Incorrect"}
+              </HighlightText>
+            )}
+            {!isAnswerRevealed && <Spinner color="orange.500" />}
+          </Flex>
         </ModalHeader>
         <ModalBody>
           <TableContainer>
@@ -116,26 +116,25 @@ const AnswerPopup = ({
                     <Text as="span">Correct answer: </Text>
                   </Td>
                   <Td>
-                    {isAnswerRevealed && (<Code>{correctAnswerTitle}</Code>)}
+                    {isAnswerRevealed && <Code>{correctAnswerTitle}</Code>}
+                  </Td>
+                </Tr>
+                <Tr>
+                  <Td>
+                    <Text as="span">Answered in: </Text>
+                  </Td>
+                  <Td>
+                    <Text as="span">{`${timeSpent}s`}</Text>
                   </Td>
                 </Tr>
               </Tbody>
             </Table>
           </TableContainer>
-          {/* <List>
-            <ListItem>
-              <Text as="span">Your answer: </Text>
-              <Code>{answer.title}</Code>
-            </ListItem>
-            <ListItem>
-              <Text as="span">Correct answer: </Text>
-            </ListItem>
-          </List> */}
         </ModalBody>
-        <ModalFooter>
+        <ModalFooter marginTop={8}>
           <Button
-            onClick={isAnswerRevealed ? onClose : () => {}}
-            colorScheme={isAnswerRevealed ? "orange" : "gray"}
+            onClick={isAnswerRevealed ? () => {onClose(); reset();}: () => {}}
+            colorScheme={isAnswerRevealed ? "green" : "gray"}
             disabled={!isAnswerRevealed}
           >
             Next Question <ArrowForwardIcon marginLeft={2} />

@@ -1,4 +1,4 @@
-import { AnswerInterface, QuestionInterface, Quiz } from "@/types/quiz";
+import { AnswerInterface, QuestionInterface, QuestionSummaryInterface, Quiz, QuizSummary } from "@/types/quiz";
 import { useState } from "react";
 
 export const useQuiz = ({
@@ -8,14 +8,14 @@ export const useQuiz = ({
   quiz: Quiz;
   questions: QuestionInterface[];
 }) => {
+  const [quizSummary, setQuizSummary] = useState<QuizSummary|null>(null);
   const [hasStarted, setHasStarted] = useState(false);
   const [isCurrentQuestionAnswered, setIsCurrentQuestionAnswered] =
     useState(false);
   const [isAnswerPopupOpen, setIsAnswerPopupOpen] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState<QuestionInterface>(
-    questions[0]
-  );
+  const [currentQuestion, setCurrentQuestion] = useState<QuestionInterface>(questions[0]);
+  const [currentQuestionSummary, setCurrentQuestionSummary] = useState<QuestionSummaryInterface|null>(null);
   const [currentAnswer, setCurrentAnswer] = useState<AnswerInterface | null>(null);
 
   /**
@@ -39,10 +39,7 @@ export const useQuiz = ({
       (currentAnswer: AnswerInterface) => {
         // Highlight the answer
         if (currentAnswer.id === answer.id) {
-          return {
-            ...currentAnswer,
-            isHighlighted: true,
-          };
+          return {...currentAnswer};
         }
 
         // If the answer is incorrect, highlight the correct answer as well
@@ -50,10 +47,7 @@ export const useQuiz = ({
           !answer.isCorrect &&
           currentAnswer.id === currentQuestion.correct_answer_id
         ) {
-          return {
-            ...currentAnswer,
-            isHighlighted: true,
-          };
+          return { ...currentAnswer };
         }
 
         return currentAnswer;
@@ -86,6 +80,8 @@ export const useQuiz = ({
   return {
     currentQuestion,
     currentAnswer,
+    quizSummary,
+    currentQuestionSummary,
     hasStarted,
     isCurrentQuestionAnswered,
     currentQuestionIndex,

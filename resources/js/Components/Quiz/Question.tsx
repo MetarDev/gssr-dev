@@ -54,8 +54,6 @@ const Question = ({
               height={"auto"}
             >
               {answer.title}
-              {answer.isHighlighted && answer.isCorrect && "✅"}
-              {answer.isHighlighted && !answer.isCorrect && "❌"}
             </Button>
 
             {showTooltip && (
@@ -73,17 +71,6 @@ const Question = ({
           </Flex>
         ))}
       </SimpleGrid>
-
-      <Flex justifyContent={"flex-end"} marginTop={8}>
-        <Button
-          onClick={isCurrentQuestionAnswered ? onNextQuestion : () => {}}
-          disabled={isCurrentQuestionAnswered}
-          visibility={isCurrentQuestionAnswered ? "visible" : "hidden"}
-          colorScheme={"green"}
-        >
-          Next Question <ArrowForwardIcon marginLeft={2} />
-        </Button>
-      </Flex>
     </div>
   );
 };
