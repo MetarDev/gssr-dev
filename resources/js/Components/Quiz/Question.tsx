@@ -34,7 +34,7 @@ const Question = ({
   onAnswer?: (answer: AnswerInterface) => void;
   onNextQuestion?: () => void;
 }) => {
-  const showTooltip = type === "feature_support" || type === "global_support";
+  const showTooltip = type === "feature_support" || type === "usage_global";
 
   return (
     <div>
