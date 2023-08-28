@@ -1,5 +1,12 @@
-import { AnswerInterface, QuestionInterface } from "@/types/quiz";
-import { ArrowForwardIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import {
+  AnswerInterface,
+  QuestionInterface,
+  QuestionSummaryInterface,
+  QuizSummary,
+} from "@/types/quiz";
+import {
+  ArrowForwardIcon,
+} from "@chakra-ui/icons";
 import {
   Button,
   Code,
@@ -21,8 +28,11 @@ import {
 } from "@chakra-ui/react";
 import { HighlightText } from "../HighlightText";
 import { useEffect, useState } from "react";
+import AnimatedScore from "./AnimatedScore";
 
 const AnswerPopup = ({
+  quizSummary,
+  currentQuestionSummary,
   question,
   answer,
   timeSpent,
@@ -32,6 +42,8 @@ const AnswerPopup = ({
   disableTimeout = false, // for debugging.
   onClose,
 }: {
+  quizSummary: QuizSummary|null;
+  currentQuestionSummary: QuestionSummaryInterface|null;
   question: QuestionInterface;
   answer: AnswerInterface | null;
   timeSpent: number;
@@ -83,17 +95,12 @@ const AnswerPopup = ({
       >
         <ModalHeader padding={8} fontSize={28}>
           <Flex alignItems={"center"}>
-            <Text as="span" marginRight={4} flexWrap="wrap">
-              {isTimeout ? "Time's up!" : "Your answer is: "}
+            <Text as="span" marginRight={2} flexWrap="wrap">
+              {isTimeout ? "Time's up!" : "You guessed: "}
             </Text>
             {isAnswerRevealed && answer && (
               <HighlightText colorScheme={answer.isCorrect ? "green" : "red"}>
-                {answer.isCorrect ? (
-                  <CheckIcon boxSize={6} marginRight={1} />
-                ) : (
-                  <CloseIcon boxSize={4} marginRight={1} />
-                )}
-                {answer.isCorrect ? "Correct" : "Incorrect"}
+                {answer.isCorrect ? "Wisely" : "Poorly"}
               </HighlightText>
             )}
             {!isAnswerRevealed && <Spinner color="orange.500" />}
@@ -103,6 +110,14 @@ const AnswerPopup = ({
           <TableContainer>
             <Table variant="simple">
               <Tbody>
+                <Tr>
+                  <Td>
+                    <Text as="span">Score: </Text>
+                  </Td>
+                  <Td>
+                    <AnimatedScore current={quizSummary?.score || 0} addition={currentQuestionSummary?.score || 0} isAnimating={isAnswerRevealed} />
+                  </Td>
+                </Tr>
                 {!isTimeout && (
                   <Tr>
                     <Td>
@@ -121,14 +136,16 @@ const AnswerPopup = ({
                     {isAnswerRevealed && <Code>{correctAnswerTitle}</Code>}
                   </Td>
                 </Tr>
-                {!isTimeout && <Tr>
-                  <Td>
-                    <Text as="span">Answered in: </Text>
-                  </Td>
-                  <Td>
-                    <Text as="span">{`${timeSpent}s`}</Text>
-                  </Td>
-                </Tr>}
+                {!isTimeout && (
+                  <Tr>
+                    <Td>
+                      <Text as="span">Answered in: </Text>
+                    </Td>
+                    <Td>
+                      <Text as="span">{`${timeSpent}s`}</Text>
+                    </Td>
+                  </Tr>
+                )}
               </Tbody>
             </Table>
           </TableContainer>

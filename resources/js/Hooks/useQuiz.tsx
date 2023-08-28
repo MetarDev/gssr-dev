@@ -1,6 +1,7 @@
 import { AnswerInterface, QuestionInterface, QuestionSummaryInterface, Quiz, QuizSummary } from "@/types/quiz";
 import { useState } from "react";
 import { useCountdown } from "./useCountdown";
+import { calculateScore } from "@/Helpers/scoring";
 
 export const useQuiz = ({
   quiz,
@@ -11,6 +12,7 @@ export const useQuiz = ({
 }) => {
   const [quizSummary, setQuizSummary] = useState<QuizSummary|null>(null);
   const [hasStarted, setHasStarted] = useState(false);
+  const [hasEnded, setHasEnded] = useState(false);
   const [isCurrentQuestionAnswered, setIsCurrentQuestionAnswered] =
     useState(false);
   const [isAnswerPopupOpen, setIsAnswerPopupOpen] = useState(false);
@@ -25,7 +27,7 @@ export const useQuiz = ({
     startTimer,
     stopTimer,
   } = useCountdown({
-    disableTimeout: true,
+    disableTimeout: false,
     from: quiz.timer,
     onTimeout: () => {
       onAnswer(null);
@@ -43,6 +45,35 @@ export const useQuiz = ({
   };
 
   /**
+   * Callback when user ends the quiz.
+   *
+   * @return void
+   */
+  const endQuiz = () => {
+    setHasEnded(false);
+    stopTimer();
+    setQuizSummary(quizSummary);
+  };
+
+  /**
+   * Add a question summary to the quiz summary.
+   *
+   * @param questionSummary Question summary to add to the quiz summary.
+   * @returns void
+   */
+  const addQuestionSummaryToQuizSummary = (questionSummary: QuestionSummaryInterface) => {
+    const newQuestions = [...(quizSummary?.questions || [])];
+
+    if (questionSummary) {
+      newQuestions.push(questionSummary);
+    }
+    setQuizSummary({
+      score: quizSummary?.score || 0 + (questionSummary?.score || 0),
+      questions: [ ...newQuestions ],
+    });
+  }
+
+  /**
    * Callback when user answers a question.
    *
    * @param answer Answer that the user clicked
@@ -52,6 +83,15 @@ export const useQuiz = ({
     setCurrentAnswer(answer);
     setIsAnswerPopupOpen(true);
     stopTimer();
+
+    const isCorrect = answer?.isCorrect || false;
+    const questionSummary = {
+      timeSpent: quiz.timer - timer,
+      score: calculateScore(isCorrect, quiz.timer - timer, quiz.timer),
+      answeredCorrectly: isCorrect,
+    };
+
+    setCurrentQuestionSummary(questionSummary);
   };
 
   /**
@@ -61,6 +101,17 @@ export const useQuiz = ({
    */
   const onNextQuestion = () => {
     const newIndex = currentQuestionIndex + 1;
+
+    if (newIndex >= questions.length) {
+      endQuiz();
+      return;
+    }
+
+    if (currentQuestionSummary) {
+      addQuestionSummaryToQuizSummary(currentQuestionSummary);
+    }
+
+    setCurrentQuestionSummary(null);
     setIsCurrentQuestionAnswered(false);
     setCurrentQuestionIndex(newIndex);
     setCurrentQuestion(questions[newIndex]);
@@ -77,6 +128,7 @@ export const useQuiz = ({
     quizSummary,
     currentQuestionSummary,
     hasStarted,
+    hasEnded,
     isCurrentQuestionAnswered,
     currentQuestionIndex,
     isAnswerPopupOpen,

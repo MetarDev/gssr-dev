@@ -31,13 +31,16 @@ export default function QuizPage({
   const {
     timer,
     isTimeout,
-    hasStarted,
     currentQuestion,
     currentAnswer,
+    quizSummary,
+    currentQuestionSummary,
+    hasStarted,
+    hasEnded,
     isCurrentQuestionAnswered,
     currentQuestionIndex,
-    numberOfQuestions,
     isAnswerPopupOpen,
+    numberOfQuestions,
     startQuiz,
     onAnswer,
     onNextQuestion,
@@ -64,13 +67,19 @@ export default function QuizPage({
         </Question>
       )}
 
+      {hasEnded &&
+        <div className="mt-8">Quiz summary goes here</div>
+      }
+
       <AnswerPopup
+        quizSummary={quizSummary}
+        currentQuestionSummary={currentQuestionSummary}
         question={currentQuestion}
         timeSpent={quiz.timer - timer}
         answer={currentAnswer}
         isTimeout={isTimeout}
         isOpen={isAnswerPopupOpen}
-        disableTimeout={true}
+        // disableTimeout={true}
         onClose={onNextQuestion}
       />
     </DefaultLayout>
