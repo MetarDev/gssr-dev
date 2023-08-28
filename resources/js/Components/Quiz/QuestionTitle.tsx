@@ -15,18 +15,14 @@ const QuestionTitle = ({
 		globalUsageData,
 	} = question;
 
-  console.log({
-    type: question.type,
-  })
-
   const headingProps: {
     as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6",
     marginBottom: number,
-    size: { base: string, lg: string },
+    size: string|{ base: string, md?: string },
   } = {
     as: "h1",
     marginBottom: 6,
-    size: { base: "md", lg: 'xl' },
+    size: { base: "md" },
   };
 
 	switch(question.type) {
@@ -38,7 +34,7 @@ const QuestionTitle = ({
 
 			return (
 				<Heading {...headingProps}>
-					Which {featureSupportData.subjectType.toUpperCase()} feature <HighlightSupports condition={featureSupportData.isSupported} supportsText="IS" notSupportsText="IS NOT" /> supported by <Code style={{ fontSize: "inherit"}}>{featureSupportData.browserName} {featureSupportData.browserVersion}</Code> ({featureSupportData.browserYear})
+					Which {featureSupportData.subjectType.toUpperCase()} feature <HighlightSupports condition={featureSupportData.isSupported} supportsText="is" notSupportsText="is not" /> supported by <Code style={{ fontSize: "inherit"}}>{featureSupportData.browserName} {featureSupportData.browserVersion}</Code> ({featureSupportData.browserYear})
 				</Heading>
 			);
 		case "browser_support":
@@ -48,7 +44,7 @@ const QuestionTitle = ({
 
 			return (
 				<Heading {...headingProps}>
-					Which {browserSupportData.subjectType} browser <HighlightSupports condition={browserSupportData.isSupported} supportsText="SUPPORTS" notSupportsText="DOES NOT SUPPORT" /> <Code style={{ fontSize: "inherit"}}>{browserSupportData.featureShortName}</Code> {`(${browserSupportData.featureFullName})`}
+					Which {browserSupportData.subjectType} browser <HighlightSupports condition={browserSupportData.isSupported} supportsText="supports" notSupportsText="does not support" /> <Code style={{ fontSize: "inherit"}}>{browserSupportData.featureShortName}</Code> {`(${browserSupportData.featureFullName})`}
 				</Heading>
 			);
 		case "usage_global":
@@ -58,7 +54,7 @@ const QuestionTitle = ({
 
 			return (
 				<Heading {...headingProps}>
-					Which {globalUsageData.subjectType.toUpperCase()} feature is <HighlightSupports condition={globalUsageData.isMostUsed} supportsText="MOST" notSupportsText="LEAST" /> globally supported?
+					Which {globalUsageData.subjectType.toUpperCase()} feature is <HighlightSupports condition={globalUsageData.isMostUsed} supportsText="most" notSupportsText="least" /> globally supported?
 				</Heading>
 			);
 		default:

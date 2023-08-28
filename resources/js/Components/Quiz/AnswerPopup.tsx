@@ -27,50 +27,45 @@ const AnswerPopup = ({
   answer,
   timeSpent,
   isOpen,
+  isTimeout = false,
+  howLongToWait = 3000, // in milliseconds
   onClose,
 }: {
   question: QuestionInterface;
-  answer: AnswerInterface;
+  answer: AnswerInterface | null;
   timeSpent: number;
   isOpen: boolean;
+  isTimeout?: boolean;
+  howLongToWait?: number;
   onClose: () => void;
 }) => {
   const { colorMode } = useColorMode();
-  const [counter, setCounter] = useState(0);
-  const [countInterval, setCountInterval] = useState<NodeJS.Timer | null>(null);
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
 
   useEffect(() => {
-    if (isOpen && !countInterval) {
-      setCountInterval(
-        setInterval(() => {
-          setCounter((prevCounter) => prevCounter + 1);
-        }, 1000)
-      );
+    // No need to do anything if we already revealed the answer
+    if (isAnswerRevealed) {
+      return;
     }
 
-    if (counter > 2 && countInterval) {
-      setIsAnswerRevealed(true);
-      clearInterval(countInterval);
-      setCountInterval(null);
+    // If we have a delay, we need to wait for the delay to pass before revealing the answer.
+    if (isOpen) {
+      if (isTimeout) {
+        setIsAnswerRevealed(true);
+      } else {
+        setTimeout(() => {
+          setIsAnswerRevealed(true);
+        }, howLongToWait);
+      }
     }
-
-    return () => {
-      clearInterval(counter);
-    };
-  }, [isOpen, counter]);
+  }, [isOpen]);
 
   const reset = () => {
-    setCounter(0);
     setIsAnswerRevealed(false);
   };
 
   const correctAnswerTitle =
     question.answers.find((a) => a.isCorrect)?.title || "";
-
-  if (!answer) {
-    return null;
-  }
 
   return (
     <Modal
@@ -87,9 +82,9 @@ const AnswerPopup = ({
         <ModalHeader padding={8} fontSize={28}>
           <Flex alignItems={"center"}>
             <Text as="span" marginRight={4} flexWrap="wrap">
-              Your answer is:{" "}
+              {isTimeout ? "Time's up!" : "Your answer is: "}
             </Text>
-            {isAnswerRevealed && (
+            {isAnswerRevealed && answer && (
               <HighlightText colorScheme={answer.isCorrect ? "green" : "red"}>
                 {answer.isCorrect ? (
                   <CheckIcon boxSize={6} marginRight={1} />
@@ -106,14 +101,16 @@ const AnswerPopup = ({
           <TableContainer>
             <Table variant="simple">
               <Tbody>
-                <Tr>
-                  <Td>
-                    <Text as="span">Your answer: </Text>
-                  </Td>
-                  <Td>
-                    <Code>{answer.title}</Code>
-                  </Td>
-                </Tr>
+                {!isTimeout && (
+                  <Tr>
+                    <Td>
+                      <Text as="span">Your answer: </Text>
+                    </Td>
+                    <Td>
+                      <Code>{answer?.title || ""}</Code>
+                    </Td>
+                  </Tr>
+                )}
                 <Tr>
                   <Td>
                     <Text as="span">Correct answer: </Text>
@@ -122,14 +119,14 @@ const AnswerPopup = ({
                     {isAnswerRevealed && <Code>{correctAnswerTitle}</Code>}
                   </Td>
                 </Tr>
-                <Tr>
+                {!isTimeout && <Tr>
                   <Td>
                     <Text as="span">Answered in: </Text>
                   </Td>
                   <Td>
                     <Text as="span">{`${timeSpent}s`}</Text>
                   </Td>
-                </Tr>
+                </Tr>}
               </Tbody>
             </Table>
           </TableContainer>

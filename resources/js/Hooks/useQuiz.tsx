@@ -1,5 +1,6 @@
 import { AnswerInterface, QuestionInterface, QuestionSummaryInterface, Quiz, QuizSummary } from "@/types/quiz";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useCountdown } from "./useCountdown";
 
 export const useQuiz = ({
   quiz,
@@ -18,6 +19,18 @@ export const useQuiz = ({
   const [currentQuestionSummary, setCurrentQuestionSummary] = useState<QuestionSummaryInterface|null>(null);
   const [currentAnswer, setCurrentAnswer] = useState<AnswerInterface | null>(null);
 
+  const {
+    timer,
+    isTimeout,
+    startTimer,
+    stopTimer,
+  } = useCountdown({
+    from: quiz.timer,
+    onTimeout: () => {
+      onAnswer(null);
+    },
+  });
+
   /**
    * Callback when user starts the quiz.
    *
@@ -25,6 +38,7 @@ export const useQuiz = ({
    */
   const startQuiz = () => {
     setHasStarted(true);
+    startTimer();
   };
 
   /**
@@ -32,35 +46,11 @@ export const useQuiz = ({
    *
    * @param answer Answer that the user clicked
    */
-  const onAnswer = (answer: AnswerInterface) => {
+  const onAnswer = (answer: AnswerInterface|null) => {
     setIsCurrentQuestionAnswered(true);
-
-    const highlightedAnswers = currentQuestion.answers.map(
-      (currentAnswer: AnswerInterface) => {
-        // Highlight the answer
-        if (currentAnswer.id === answer.id) {
-          return {...currentAnswer};
-        }
-
-        // If the answer is incorrect, highlight the correct answer as well
-        if (
-          !answer.isCorrect &&
-          currentAnswer.id === currentQuestion.correct_answer_id
-        ) {
-          return { ...currentAnswer };
-        }
-
-        return currentAnswer;
-      }
-    );
-
-    setCurrentQuestion({
-      ...currentQuestion,
-      answers: highlightedAnswers,
-    });
-
     setCurrentAnswer(answer);
     setIsAnswerPopupOpen(true);
+    stopTimer();
   };
 
   /**
@@ -75,18 +65,12 @@ export const useQuiz = ({
     setCurrentQuestion(questions[newIndex]);
     setCurrentAnswer(null);
     setIsAnswerPopupOpen(false);
-  };
-
-  /**
-   * Callback when the timer runs out.
-   *
-   * @return void
-   */
-  const onTimeout = () => {
-    console.log('timeout');
+    startTimer();
   };
 
   return {
+    timer,
+    isTimeout,
     currentQuestion,
     currentAnswer,
     quizSummary,
@@ -99,6 +83,5 @@ export const useQuiz = ({
     startQuiz,
     onAnswer,
     onNextQuestion,
-    onTimeout,
   };
 };

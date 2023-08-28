@@ -17,22 +17,22 @@ import Countdown from "./Countdown";
 
 const Question = ({
   children,
-  timer,
+  countdownFrom,
+  countdownValue,
   question: { answers, type },
   isCurrentQuestionAnswered,
   subtitle = "",
   onAnswer = (answer: AnswerInterface) => {},
   onNextQuestion,
-  onTimeout,
 }: {
   children: React.ReactNode;
-  timer: number;
+  countdownFrom: number;
+  countdownValue: number;
   question: QuestionInterface;
   isCurrentQuestionAnswered: boolean;
   subtitle: string;
   onAnswer?: (answer: AnswerInterface) => void;
   onNextQuestion?: () => void;
-  onTimeout: () => void;
 }) => {
   const showTooltip = type === "feature_support" || type === "global_support";
 
@@ -41,7 +41,7 @@ const Question = ({
       <Heading as="h2" textColor={"gray.500"} size="sm" marginBottom={2}>
         {subtitle}
       </Heading>
-      <Countdown initial={timer} onTimeout={onTimeout} />
+      <Countdown from={countdownFrom} value={countdownValue} />
       {children}
       <Divider marginTop={8} marginBottom={8} />
       <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8}>

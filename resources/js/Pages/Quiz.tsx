@@ -28,8 +28,9 @@ export default function QuizPage({
   questions: QuestionInterface[];
   url: string;
 }>) {
-
   const {
+    timer,
+    isTimeout,
     hasStarted,
     currentQuestion,
     currentAnswer,
@@ -40,10 +41,7 @@ export default function QuizPage({
     startQuiz,
     onAnswer,
     onNextQuestion,
-    onTimeout,
   } = useQuiz({ quiz, questions });
-
-  console.log(currentQuestion);
 
   return (
     <DefaultLayout justifyContent="center" title="Quiz">
@@ -52,7 +50,8 @@ export default function QuizPage({
       )}
       {hasStarted && (
         <Question
-          timer={quiz.timer}
+          countdownFrom={quiz.timer}
+          countdownValue={timer}
           subtitle={`Question ${
             currentQuestionIndex + 1
           } of ${numberOfQuestions}`}
@@ -60,7 +59,6 @@ export default function QuizPage({
           question={currentQuestion}
           onAnswer={onAnswer}
           onNextQuestion={onNextQuestion}
-          onTimeout={onTimeout}
         >
           <QuestionTitle question={currentQuestion} />
         </Question>
@@ -68,7 +66,9 @@ export default function QuizPage({
 
       <AnswerPopup
         question={currentQuestion}
+        timeSpent={quiz.timer - timer}
         answer={currentAnswer}
+        isTimeout={isTimeout}
         isOpen={isAnswerPopupOpen}
         onClose={onNextQuestion}
       />
