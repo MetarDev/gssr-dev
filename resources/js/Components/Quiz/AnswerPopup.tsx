@@ -29,6 +29,7 @@ const AnswerPopup = ({
   isOpen,
   isTimeout = false,
   howLongToWait = 3000, // in milliseconds
+  disableTimeout = false, // for debugging.
   onClose,
 }: {
   question: QuestionInterface;
@@ -37,6 +38,7 @@ const AnswerPopup = ({
   isOpen: boolean;
   isTimeout?: boolean;
   howLongToWait?: number;
+  disableTimeout?: boolean;
   onClose: () => void;
 }) => {
   const { colorMode } = useColorMode();
@@ -50,7 +52,7 @@ const AnswerPopup = ({
 
     // If we have a delay, we need to wait for the delay to pass before revealing the answer.
     if (isOpen) {
-      if (isTimeout) {
+      if (isTimeout || disableTimeout) {
         setIsAnswerRevealed(true);
       } else {
         setTimeout(() => {

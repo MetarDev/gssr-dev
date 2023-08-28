@@ -70,6 +70,7 @@ export default function QuizPage({
         answer={currentAnswer}
         isTimeout={isTimeout}
         isOpen={isAnswerPopupOpen}
+        disableTimeout={true}
         onClose={onNextQuestion}
       />
     </DefaultLayout>

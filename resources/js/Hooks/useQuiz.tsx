@@ -25,6 +25,7 @@ export const useQuiz = ({
     startTimer,
     stopTimer,
   } = useCountdown({
+    disableTimeout: true,
     from: quiz.timer,
     onTimeout: () => {
       onAnswer(null);

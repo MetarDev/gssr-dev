@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 
 export const useCountdown = ({
   from,
+  disableTimeout = false, // for debugging purposes
   onTimeout,
 }: {
   from: number;
+  disableTimeout?: boolean;
   onTimeout: () => void;
 }) => {
   const [timer, setTimer] = useState(0);
@@ -53,7 +55,10 @@ export const useCountdown = ({
   useEffect(() => {
     if (isTimeout) {
       stopTimer();
-      onTimeout();
+
+      if (!disableTimeout) {
+        onTimeout();
+      }
     }
   }, [isTimeout]);
 
