@@ -14,7 +14,7 @@ export default function CopyToClipboard({
   toCopy: string;
   subject?: string;
   marginLeft?: number;
-  size: IconSize,
+  size?: IconSize,
   variant?: 'outline' | 'solid';
 }) {
   const { onCopy, hasCopied } = useClipboard(toCopy);
