@@ -45,8 +45,8 @@ export default function QuizSummary({
       </Heading>
 
       <SimpleGrid
-        columns={{ base: 1, md: 3 }}
-        spacing={{ base: 4, lg: 12 }}
+        columns={{ base: 1, sm: 2, md: 3 }}
+        spacing={{ base: 4, md: 8, lg: 12 }}
         width={"full"}
       >
         <StatsCard

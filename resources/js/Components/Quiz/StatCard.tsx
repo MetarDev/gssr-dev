@@ -16,26 +16,32 @@ const StatsCard = ({
   return (
     <StyledCard>
       <Stat>
-        <Flex justifyContent={"space-between"} gap={12} alignItems={"center"} width={"full"} marginBottom={4}>
-          <VStack alignItems={"flex-start"} gap={0}>
-            <Text as="h3" color={"brandTextLight"}>
-              {title}
-            </Text>
+        <VStack alignItems={"flex-start"} gap={0}>
+          <Text as="h3" color={"brandTextLight"}>
+            {title}
+          </Text>
+          <Flex
+            justifyContent={"space-between"}
+            gap={2}
+            alignItems={"center"}
+            width={"full"}
+            marginBottom={4}
+          >
             <Text as="h3" fontSize={"2xl"} color={"brandTextDefault"}>
               {children}
             </Text>
-          </VStack>
+            {icon}
+          </Flex>
 
-          {icon}
-        </Flex>
-
-        <Progress
-          size={"sm"}
-          value={valueAsPercentage}
-          colorScheme="orange"
-          flexGrow={1}
-          flexShrink={0}
-        />
+          <Progress
+            size={"sm"}
+            w={"full"}
+            value={valueAsPercentage}
+            colorScheme="orange"
+            flexGrow={1}
+            flexShrink={0}
+          />
+        </VStack>
       </Stat>
     </StyledCard>
   );
