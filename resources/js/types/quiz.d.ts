@@ -58,6 +58,7 @@ export interface QuestionSummaryInterface {
   score: number;
   answerId: number|null;
   answeredCorrectly: boolean;
+  question: QuestionInterface;
 }
 
 export type RealBrowserType = 'desktop' | 'mobile';

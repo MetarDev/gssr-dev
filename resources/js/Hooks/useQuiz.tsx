@@ -98,6 +98,7 @@ export const useQuiz = ({
       score: calculateScore(isCorrect, quiz.timer - timer, quiz.timer),
       answeredCorrectly: isCorrect,
       answerId: answer?.id || null,
+      question: currentQuestion,
     };
 
     setCurrentQuestionSummary(questionSummary);

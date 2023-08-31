@@ -70,12 +70,11 @@ export default function QuizSummary({
         Questions:
       </Heading>
 
-      {questions.map((question, index) => (
+      {quizSummary.questions.map((questionSummary, index) => (
         <QuestionSummary
           index={index}
-          key={question.hash}
-          question={question}
-          questionSummary={quizSummary.questions[index]}
+          key={questionSummary.question.hash}
+          questionSummary={questionSummary}
         />
       ))}
 

@@ -17,21 +17,19 @@ import { HighlightText } from "../HighlightText";
 
 const QuestionSummary = ({
   index,
-  question,
   questionSummary,
 }: {
   index: number;
-  question: QuestionInterface;
   questionSummary: QuestionSummaryInterface;
 }) => {
   const { colorMode } = useColorMode();
   const checkIconColor = colorMode === "dark" ? "green.300" : "green.600";
   const closeIconColor = colorMode === "dark" ? "red.300" : "red.600";
-  const userAnswer = question.answers.find(
+  const userAnswer = questionSummary.question.answers.find(
     (a) => a.id === questionSummary.answerId
   );
 
-  const correctAnswer = question.answers.find((a) => a.isCorrect);
+  const correctAnswer = questionSummary.question.answers.find((a) => a.isCorrect);
 
   return (
     <Card
@@ -56,7 +54,7 @@ const QuestionSummary = ({
           {questionSummary.answeredCorrectly ? "Correct" : "Incorrect"}
         </Heading>
       </Flex>
-      <QuestionTitle question={question} />
+      <QuestionTitle question={questionSummary.question} />
 
       <UnorderedList>
         {userAnswer && <ListItem><Text as="span">Your answer: </Text><HighlightText colorScheme="orange">{userAnswer.title}</HighlightText></ListItem>}
