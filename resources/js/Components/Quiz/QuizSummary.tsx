@@ -1,10 +1,5 @@
 import { QuestionInterface, Quiz, QuizSummaryInterface } from "@/types/quiz";
-import {
-  Divider,
-  Heading,
-  SimpleGrid,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Divider, Heading, Link, SimpleGrid, VStack } from "@chakra-ui/react";
 import { CheckIcon, StarIcon, TimeIcon } from "@chakra-ui/icons";
 import StatsCard from "./StatCard";
 import ShareQuizCta from "./ShareQuizCta";
@@ -83,6 +78,10 @@ export default function QuizSummary({
           questionSummary={quizSummary.questions[index]}
         />
       ))}
+
+      <Button as={Link} href="/quiz" colorScheme="green" alignSelf={"flex-end"}>
+        Start another quiz!
+      </Button>
     </VStack>
   );
 }
