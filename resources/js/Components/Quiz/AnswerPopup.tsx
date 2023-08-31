@@ -111,7 +111,7 @@ const AnswerPopup = ({
             <Table variant="simple">
               <Tbody>
                 <Tr>
-                  <Td>
+                  <Td paddingLeft={0}>
                     <Text as="span">Score: </Text>
                   </Td>
                   <Td>
@@ -120,7 +120,7 @@ const AnswerPopup = ({
                 </Tr>
                 {!isTimeout && (
                   <Tr>
-                    <Td>
+                    <Td paddingLeft={0}>
                       <Text as="span">Your answer: </Text>
                     </Td>
                     <Td>
@@ -129,7 +129,7 @@ const AnswerPopup = ({
                   </Tr>
                 )}
                 <Tr>
-                  <Td>
+                  <Td paddingLeft={0}>
                     <Text as="span">Correct answer: </Text>
                   </Td>
                   <Td>
@@ -138,7 +138,7 @@ const AnswerPopup = ({
                 </Tr>
                 {!isTimeout && (
                   <Tr>
-                    <Td>
+                    <Td paddingLeft={0}>
                       <Text as="span">Answered in: </Text>
                     </Td>
                     <Td>
