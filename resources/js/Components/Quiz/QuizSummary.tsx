@@ -1,74 +1,91 @@
-import { Quiz } from "@/types/quiz";
+import { Quiz, QuizSummaryInterface } from "@/types/quiz";
 import {
   Button,
-  Center,
-  Flex,
+  Divider,
   Heading,
-  IconButton,
+  SimpleGrid,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
   Text,
-  Tooltip,
   Tr,
   VStack,
-  useClipboard,
 } from "@chakra-ui/react";
 import { StyledCard } from "../StyledCard";
 import CopyToClipboard from "../CopyToClipboard";
+import { calculateMaxScore } from "@/Helpers/scoring";
+import { CheckIcon, StarIcon, TimeIcon } from "@chakra-ui/icons";
+import StatsCard from "./StatCard";
+import { HighlightText } from "../HighlightText";
+import ShareQuizCta from "./ShareQuizCta";
 
 export default function QuizSummary({
-  quiz: { timer, questions },
+  quiz,
+  quizSummary,
   url,
-  onStartQuiz,
 }: {
   quiz: Quiz;
+  quizSummary: QuizSummaryInterface | null;
   url: string;
-  onStartQuiz: () => void;
 }) {
+  if (!quizSummary) {
+    return null;
+  }
+
   return (
     <VStack
-      align={"left"}
-      spacing={{ base: 8, md: 12 }}
-      maxW={"xl"}
-      alignItems={"flex-start"}
+      align={"center"}
+      spacing={{ base: 8, md: 16 }}
+      alignItems={"center"}
+      marginTop={{ base: 8, md: 36 }}
     >
-      <Heading>Quiz summary:</Heading>
-      <StyledCard>
-        <TableContainer>
-          <Table variant="simple">
-            <Tbody>
-              <Tr>
-                <Td>Timer:</Td>
-                <Td>{timer}s</Td>
-              </Tr>
-              <Tr>
-                <Td>Questions:</Td>
-                <Td>{questions.length}</Td>
-              </Tr>
-              <Tr>
-                <Td>
-                  URL: <CopyToClipboard toCopy={url} />
-                </Td>
-                <Td>
-                  <Text>{url}</Text>
-                </Td>
-              </Tr>
-            </Tbody>
-          </Table>
-        </TableContainer>
+      <Heading size={"2xl"} marginBottom={8}>
+        You completed the quiz!{" "}
+      </Heading>
 
-        <Button
-          colorScheme="green"
-          alignSelf={"flex-end"}
-          marginTop={"8"}
-          onClick={onStartQuiz}
+      <SimpleGrid
+        columns={{ base: 1, md: 3 }}
+        spacing={{ base: 4, lg: 12 }}
+        width={"full"}
+      >
+        <StatsCard
+          title={"Score"}
+          icon={<StarIcon boxSize={8} />}
+          valueAsPercentage={(quizSummary.score / quizSummary.maxScore) * 100}
         >
-          Start quiz!
-        </Button>
-      </StyledCard>
+          {quizSummary.score} / {quizSummary.maxScore}
+        </StatsCard>
+        <StatsCard
+          title={"Correct answers"}
+          icon={<CheckIcon boxSize={8} />}
+          valueAsPercentage={
+            (quizSummary.correctQuestions / quizSummary.totalQuestions) * 100
+          }
+        >
+          {quizSummary.correctQuestions} / {quizSummary.totalQuestions}
+        </StatsCard>
+        <StatsCard
+          title={"Avg. time / question"}
+          icon={<TimeIcon boxSize={8} />}
+          valueAsPercentage={
+            ((quizSummary.avgTimePerQuestion || 0) / quiz.timer) * 100
+          }
+        >
+          {quizSummary.avgTimePerQuestion}s
+        </StatsCard>
+      </SimpleGrid>
+
+      <ShareQuizCta url={url} quizSummary={quizSummary} />
+
+      <Divider />
+      <Heading as="h2" size={"md"}>
+        Questions:
+      </Heading>
+      <Text>
+        Accordions with questions and answers (correct marked, answered marked)
+        go here
+      </Text>
     </VStack>
   );
 }

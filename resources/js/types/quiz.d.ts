@@ -42,14 +42,21 @@ export interface AnswerInterface {
 	}
 }
 
-export interface QuizSummary {
+export interface QuizSummaryInterface {
+  questions: QuestionSummaryInterface[],
   score: number;
-  questions: QuestionSummaryInterface[]
+  maxScore: number,
+  correctQuestions: number,
+  totalQuestions: number,
+  timeSpent: number,
+  timeTotal: number,
+  avgTimePerQuestion?: number|null,
 }
 
 export interface QuestionSummaryInterface {
   timeSpent: number;
   score: number;
+  answerId: number|null;
   answeredCorrectly: boolean;
 }
 

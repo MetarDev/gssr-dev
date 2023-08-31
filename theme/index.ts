@@ -50,6 +50,16 @@ const theme = {
 	*/
 	// https://github.com/chakra-ui/chakra-ui/blob/main/packages/components/theme/src/foundations/index.ts#L13
 	semanticTokens: {
+    colors: {
+      brandTextDefault: {
+        default: 'gray.800',
+        _dark: 'gray.100',
+      },
+      brandTextLight: {
+        default: 'gray.600',
+        _dark: 'gray.400',
+      },
+    },
 		sizes: {
 			header_height: '72px',
 			footer_height: '72px',

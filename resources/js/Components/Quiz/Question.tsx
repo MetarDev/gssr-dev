@@ -52,7 +52,6 @@ const Question = ({
               flexShrink="50%"
               padding={4}
               flexWrap={"wrap"}
-              // flexShrink="50%"
               onClick={() => onAnswer(answer)}
               isDisabled={isCurrentQuestionAnswered}
               whiteSpace={"normal"}

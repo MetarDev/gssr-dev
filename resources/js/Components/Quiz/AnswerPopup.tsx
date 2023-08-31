@@ -2,7 +2,7 @@ import {
   AnswerInterface,
   QuestionInterface,
   QuestionSummaryInterface,
-  QuizSummary,
+  QuizSummaryInterface,
 } from "@/types/quiz";
 import {
   ArrowForwardIcon,
@@ -38,11 +38,11 @@ const AnswerPopup = ({
   timeSpent,
   isOpen,
   isTimeout = false,
-  howLongToWait = 3000, // in milliseconds
+  howLongToWait = 1000, // in milliseconds
   disableTimeout = false, // for debugging.
   onClose,
 }: {
-  quizSummary: QuizSummary|null;
+  quizSummary: QuizSummaryInterface|null;
   currentQuestionSummary: QuestionSummaryInterface|null;
   question: QuestionInterface;
   answer: AnswerInterface | null;

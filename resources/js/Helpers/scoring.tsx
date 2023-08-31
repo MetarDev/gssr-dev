@@ -1,3 +1,5 @@
+import { Quiz, QuizSummaryInterface } from "@/types/quiz";
+
 const CORRECT_ANSWER_SCORE = 100;
 
 /**
@@ -21,3 +23,15 @@ export const calculateScore = (
   const modifier = 1 + (1 - timeSpent / totalTime);
   return Math.round(CORRECT_ANSWER_SCORE * modifier);
 };
+
+/**
+ * Calculate the maximum score for a quiz.
+ *
+ * @param {Quiz} quiz Quiz to calculate the maximum score for.
+ * @returns {number} The maximum score for the quiz.
+ */
+export const calculateMaxScore = (quiz: Quiz) => {
+  return quiz.questions.reduce((acc, question) => {
+    return acc + CORRECT_ANSWER_SCORE * 2;
+  }, 0);
+}

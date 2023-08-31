@@ -1,7 +1,7 @@
-import { AnswerInterface, QuestionInterface, QuestionSummaryInterface, Quiz, QuizSummary } from "@/types/quiz";
+import { AnswerInterface, QuestionInterface, QuestionSummaryInterface, Quiz, QuizSummaryInterface } from "@/types/quiz";
 import { useState } from "react";
 import { useCountdown } from "./useCountdown";
-import { calculateScore } from "@/Helpers/scoring";
+import { calculateMaxScore, calculateScore } from "@/Helpers/scoring";
 
 export const useQuiz = ({
   quiz,
@@ -10,7 +10,7 @@ export const useQuiz = ({
   quiz: Quiz;
   questions: QuestionInterface[];
 }) => {
-  const [quizSummary, setQuizSummary] = useState<QuizSummary|null>(null);
+  const [quizSummary, setQuizSummary] = useState<QuizSummaryInterface|null>(null);
   const [hasStarted, setHasStarted] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
   const [isCurrentQuestionAnswered, setIsCurrentQuestionAnswered] =
@@ -50,8 +50,7 @@ export const useQuiz = ({
    * @return void
    */
   const endQuiz = () => {
-    setHasEnded(false);
-    stopTimer();
+    setHasEnded(true);
     setQuizSummary(quizSummary);
   };
 
@@ -67,9 +66,18 @@ export const useQuiz = ({
     if (questionSummary) {
       newQuestions.push(questionSummary);
     }
+
     setQuizSummary({
       score: quizSummary?.score || 0 + (questionSummary?.score || 0),
       questions: [ ...newQuestions ],
+      correctQuestions: quizSummary?.correctQuestions || 0 + (questionSummary?.answeredCorrectly ? 1 : 0),
+      totalQuestions: quizSummary?.totalQuestions || 0 + 1,
+      timeSpent: quizSummary?.timeSpent || 0 + questionSummary?.timeSpent || 0,
+      timeTotal: quizSummary?.timeTotal || 0 + quiz.timer,
+      avgTimePerQuestion: quizSummary ? quizSummary.questions.reduce((acc, question) => {
+        return acc + question.timeSpent;
+      }, 0) / quizSummary.questions.length : 0,
+      maxScore: calculateMaxScore(quiz),
     });
   }
 
@@ -89,6 +97,7 @@ export const useQuiz = ({
       timeSpent: quiz.timer - timer,
       score: calculateScore(isCorrect, quiz.timer - timer, quiz.timer),
       answeredCorrectly: isCorrect,
+      answerId: answer?.id || null,
     };
 
     setCurrentQuestionSummary(questionSummary);
@@ -102,22 +111,22 @@ export const useQuiz = ({
   const onNextQuestion = () => {
     const newIndex = currentQuestionIndex + 1;
 
-    if (newIndex >= questions.length) {
-      endQuiz();
-      return;
-    }
-
     if (currentQuestionSummary) {
       addQuestionSummaryToQuizSummary(currentQuestionSummary);
     }
 
     setCurrentQuestionSummary(null);
     setIsCurrentQuestionAnswered(false);
-    setCurrentQuestionIndex(newIndex);
-    setCurrentQuestion(questions[newIndex]);
     setCurrentAnswer(null);
     setIsAnswerPopupOpen(false);
-    startTimer();
+
+    if (questions[newIndex]) {
+      setCurrentQuestionIndex(newIndex);
+      setCurrentQuestion(questions[newIndex]);
+      startTimer();
+    } else {
+      endQuiz();
+    }
   };
 
   return {
