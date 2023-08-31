@@ -32,7 +32,7 @@ export default function QuizSplashScreen({
       <Heading size={"2xl"}>Quiz summary:</Heading>
       <StyledCard>
         <TableContainer>
-          <Table variant="simple">
+          <Table variant="simple" style={{ "borderCollapse": "collapse", tableLayout: "fixed" }}>
             <Tbody>
               <Tr>
                 <Td>Timer:</Td>
