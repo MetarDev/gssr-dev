@@ -1,31 +1,23 @@
-import { Quiz, QuizSummaryInterface } from "@/types/quiz";
+import { QuestionInterface, Quiz, QuizSummaryInterface } from "@/types/quiz";
 import {
-  Button,
   Divider,
   Heading,
   SimpleGrid,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Tr,
   VStack,
 } from "@chakra-ui/react";
-import { StyledCard } from "../StyledCard";
-import CopyToClipboard from "../CopyToClipboard";
-import { calculateMaxScore } from "@/Helpers/scoring";
 import { CheckIcon, StarIcon, TimeIcon } from "@chakra-ui/icons";
 import StatsCard from "./StatCard";
-import { HighlightText } from "../HighlightText";
 import ShareQuizCta from "./ShareQuizCta";
+import QuestionSummary from "./QuestionSummary";
 
 export default function QuizSummary({
   quiz,
+  questions,
   quizSummary,
   url,
 }: {
   quiz: Quiz;
+  questions: QuestionInterface[];
   quizSummary: QuizSummaryInterface | null;
   url: string;
 }) {
@@ -79,13 +71,18 @@ export default function QuizSummary({
       <ShareQuizCta url={url} quizSummary={quizSummary} />
 
       <Divider />
-      <Heading as="h2" size={"md"}>
+      <Heading as="h2" size={"xl"}>
         Questions:
       </Heading>
-      <Text>
-        Accordions with questions and answers (correct marked, answered marked)
-        go here
-      </Text>
+
+      {questions.map((question, index) => (
+        <QuestionSummary
+          index={index}
+          key={question.hash}
+          question={question}
+          questionSummary={quizSummary.questions[index]}
+        />
+      ))}
     </VStack>
   );
 }
