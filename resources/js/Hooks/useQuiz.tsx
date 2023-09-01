@@ -51,7 +51,6 @@ export const useQuiz = ({
    */
   const endQuiz = () => {
     setHasEnded(true);
-    setQuizSummary(quizSummary);
   };
 
   /**
@@ -61,19 +60,15 @@ export const useQuiz = ({
    * @returns void
    */
   const addQuestionSummaryToQuizSummary = (questionSummary: QuestionSummaryInterface) => {
-    const newQuestions = [...(quizSummary?.questions || [])];
-
-    if (questionSummary) {
-      newQuestions.push(questionSummary);
-    }
+    const newQuestions = [...(quizSummary?.questions || []), questionSummary];
 
     setQuizSummary({
-      score: quizSummary?.score || 0 + (questionSummary?.score || 0),
+      score: (quizSummary?.score || 0) + (questionSummary?.score || 0),
       questions: [ ...newQuestions ],
-      correctQuestions: quizSummary?.correctQuestions || 0 + (questionSummary?.answeredCorrectly ? 1 : 0),
-      totalQuestions: quizSummary?.totalQuestions || 0 + 1,
-      timeSpent: quizSummary?.timeSpent || 0 + questionSummary?.timeSpent || 0,
-      timeTotal: quizSummary?.timeTotal || 0 + quiz.timer,
+      correctQuestions: (quizSummary?.correctQuestions || 0) + (questionSummary?.answeredCorrectly ? 1 : 0),
+      totalQuestions: (quizSummary?.totalQuestions || 0) + 1,
+      timeSpent: (quizSummary?.timeSpent || 0) + (questionSummary?.timeSpent || 0),
+      timeTotal: (quizSummary?.timeTotal || 0) + quiz.timer,
       avgTimePerQuestion: quizSummary ? quizSummary.questions.reduce((acc, question) => {
         return acc + question.timeSpent;
       }, 0) / quizSummary.questions.length : 0,
