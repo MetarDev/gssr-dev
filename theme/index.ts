@@ -67,10 +67,6 @@ const theme = {
       defaultProps: {
         size: "xl"
       },
-      //   dialog: {
-      //     backgroundColor: props.colorMode === "dark" ? "gray.800" : "gray.200",
-      //   }
-      // }
     }),
   },
   /*
