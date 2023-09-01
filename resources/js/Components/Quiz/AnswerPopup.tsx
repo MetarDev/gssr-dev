@@ -92,6 +92,8 @@ const AnswerPopup = ({
       <ModalContent
         backgroundColor={colorMode === "dark" ? "gray.800" : "gray.200"}
         margin={"auto"}
+        borderRadius={8}
+        overflow={"hidden"}
       >
         <ModalHeader padding={8} fontSize={28}>
           <Flex alignItems={"center"}>
@@ -111,7 +113,7 @@ const AnswerPopup = ({
             <Table variant="simple">
               <Tbody>
                 <Tr>
-                  <Td paddingLeft={0}>
+                  <Td paddingLeft={{base: 0, md: 4}}>
                     <Text as="span">Score: </Text>
                   </Td>
                   <Td>
@@ -120,7 +122,7 @@ const AnswerPopup = ({
                 </Tr>
                 {!isTimeout && (
                   <Tr>
-                    <Td paddingLeft={0}>
+                    <Td paddingLeft={{base: 0, md: 4}}>
                       <Text as="span">Your answer: </Text>
                     </Td>
                     <Td>
@@ -129,7 +131,7 @@ const AnswerPopup = ({
                   </Tr>
                 )}
                 <Tr>
-                  <Td paddingLeft={0}>
+                  <Td paddingLeft={{base: 0, md: 4}}>
                     <Text as="span">Correct answer: </Text>
                   </Td>
                   <Td>
@@ -138,7 +140,7 @@ const AnswerPopup = ({
                 </Tr>
                 {!isTimeout && (
                   <Tr>
-                    <Td paddingLeft={0}>
+                    <Td paddingLeft={{base: 0, md: 4}}>
                       <Text as="span">Answered in: </Text>
                     </Td>
                     <Td>
