@@ -27,7 +27,6 @@ export interface QuestionInterface {
 	globalUsageData?: {
 		isMostUsed: boolean,
 		subjectType: string,
-		fullFeatureName: string,
 	},
 }
 

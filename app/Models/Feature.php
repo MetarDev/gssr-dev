@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
+use App\Models\Browser;
 
 class Feature extends Model
 {
@@ -69,7 +70,7 @@ class Feature extends Model
      * Return all supported browsers for a given type.
      *
      * @param string $type
-     * @return Collection<int, int>
+     * @return Collection<int, Browser>
      */
     public function getSupportedBrowsersByType(string $type): Collection
     {
@@ -80,7 +81,7 @@ class Feature extends Model
      * Returns all unsupported browsers for a given type.
      *
      * @param string $type
-     * @return Collection<int, int>
+     * @return Collection<int, Browser>
      */
     public function getUnsupportedBrowsersByType(string $type): Collection
     {

@@ -15,4 +15,14 @@ class Answer extends Model
      * @var array<string>
      */
     protected $guarded = [];
+
+    public function setIsCorrect(bool $isCorrect): void
+    {
+        $this->isCorrect = $isCorrect;
+    }
+
+    public function getIsCorrect(): bool
+    {
+        return $this->isCorrect;
+    }
 }

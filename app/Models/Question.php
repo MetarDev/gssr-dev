@@ -48,7 +48,7 @@ class Question extends Model
     /**
      * Returns either a Feature model or a Browser model depending on questions type
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function subject(): BelongsTo
     {
@@ -67,7 +67,7 @@ class Question extends Model
     /**
      * Returns either a Feature model or a Browser model depending on questions type
      *
-     * @return string
+     * @return BelongsTo
      */
     public function correctAnswer(): BelongsTo
     {

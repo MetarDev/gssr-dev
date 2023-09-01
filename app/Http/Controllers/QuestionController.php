@@ -20,9 +20,9 @@ class QuestionController extends Controller
     protected $answerController;
 
     /**
-     * COnstructs object.
+     * Constructs object.
      *
-     * @var AnswerController
+     * @param AnswerController $answerController
      */
     public function __construct(AnswerController $answerController)
     {
@@ -53,9 +53,8 @@ class QuestionController extends Controller
     /**
      * Builds answer models for the each question.
      *
-     * @param Collection $answers
-     * @param string $answerModelClass
-     * @return Collection
+     * @param Question $question
+     * @return Question
      */
     public function buildAnswersForQuestion(Question $question): Question
     {
@@ -102,7 +101,6 @@ class QuestionController extends Controller
                 $question->globalUsageData = [
                     'isMostUsed' => $question->supports === Question::SUPPORTED,
                     'subjectType' => $question->subject_type,
-                    'fullFeatureName' => $question->feature_full_name,
                 ];
                 break;
         }

@@ -7,10 +7,10 @@ use App\Models\Question;
 use App\Models\Quiz;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
+use Illuminate\Http\RedirectResponse;
 
 class QuizController extends Controller
 {
-
     /**
      * The question controller instance.
      *
@@ -21,7 +21,7 @@ class QuizController extends Controller
     /**
      * The question controller instance.
      *
-     * @var QuestionController
+     * @param QuestionController $questionController
      */
     public function __construct(QuestionController $questionController)
     {
@@ -31,7 +31,7 @@ class QuizController extends Controller
     /**
      * Display the quiz page.
      *
-     * @return \Inertia\Response
+     * @return RedirectResponse
      */
     public function index()
     {

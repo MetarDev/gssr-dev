@@ -14,8 +14,8 @@ class AnswerController extends Controller
     /**
      * Build the answer for the question.
      *
-     * @param Question $question
-     * @return Collection
+     * @param Collection<int|string, Feature|Browser> $models All Feature/Browser models.
+     * @return Collection<int|string, Answer>
      */
     public function buildAnswersForQuestion(Collection $models): Collection
     {
@@ -28,7 +28,7 @@ class AnswerController extends Controller
      * @param Feature|Browser $model
      * @return Answer
      */
-    public function buildAnswerFromModel(mixed $model): Answer
+    public function buildAnswerFromModel(Feature|Browser $model): Answer
     {
         $isBrowser = $model instanceof Browser;
         if ($isBrowser) {
@@ -41,7 +41,7 @@ class AnswerController extends Controller
             $description = $model->description;
         }
 
-        return Answer::make([
+        return new Answer([
             'id' => $model->id,
             'title' => $title,
             'titleLong' => $titleLong,
