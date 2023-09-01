@@ -70,7 +70,7 @@ class QuizGenerator
             $browser_start = microtime(true);
             $quizOverview->browserSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
                 $questions->push($this->questionGenerator->generateBrowserSupportQuestion(
-                    $params['category'],
+                    $params['type'],
                     $params['supports'],
                     $answersCount,
                 ));
@@ -81,7 +81,7 @@ class QuizGenerator
             $feature_start = microtime(true);
             $quizOverview->featureSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
                 $questions->push($this->questionGenerator->generateFeatureSupportQuestion(
-                    $params['type'],
+                    $params['category'],
                     $params['supports'],
                     $answersCount,
                 ));

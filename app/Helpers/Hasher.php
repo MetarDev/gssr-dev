@@ -43,11 +43,12 @@ class Hasher
      */
     public static function calculateQuizHash(Collection $questions, int $timer): string
     {
-        return md5(
+        return hash(
+            'crc32',
             $timer .
-            $questions->map(function (Question $question) {
+            $questions->sum(function (Question $question) {
                 return $question->id;
-            })->implode('')
+            })
         );
     }
 }

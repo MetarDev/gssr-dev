@@ -120,6 +120,28 @@ class QuizOverview
     }
 
     /**
+     * Generates a spread of feature support questions
+     *
+     * @return void
+     */
+    private function generateFeatureSupportSpread()
+    {
+        if ($this->questionTypeSpread[Question::TYPE_FEATURE] === 0) {
+            return;
+        }
+
+        for ($i = 0; $i < $this->questionTypeSpread[Question::TYPE_FEATURE]; $i++) {
+            $category = $this->getPreferentialCategorySpread()->random();
+            $supports = $this->getRandomSupports();
+
+            $this->featureSupportQuestions->push([
+                'supports' => $supports,
+                'category' => $category,
+              ]);
+        }
+    }
+
+    /**
      * Generates a spread of browser support questions
      *
      * @return void
@@ -131,38 +153,13 @@ class QuizOverview
         }
 
         for ($i = 0; $i < $this->questionTypeSpread[Question::TYPE_BROWSER]; $i++) {
-            $category = $this->getPreferentialCategorySpread()->random();
+            // No real point in creating mobile questions for now as they only browsers with valid support data are
+            // iOS safari and Samsung browser (so at best you get 2 Samsung browsers and 2 iOS safari browsers as answers,
+            // and at worst 4 different versions of the same browser)
+            $type = Browser::TYPE_DESKTOP;
             $supports = $this->getRandomSupports();
 
             $this->browserSupportQuestions->push([
-                'supports' => $supports,
-                'category' => $category,
-              ]);
-        }
-    }
-
-    /**
-     * Generates a spread of feature support questions
-     *
-     * @return void
-     */
-    private function generateFeatureSupportSpread()
-    {
-        if ($this->questionTypeSpread[Question::TYPE_FEATURE] === 0) {
-            return;
-        }
-
-        $preferentialTypeSpread = collect([
-            Browser::TYPE_DESKTOP,
-            Browser::TYPE_DESKTOP,
-            Browser::TYPE_MOBILE,
-        ]);
-
-        for ($i = 0; $i < $this->questionTypeSpread[Question::TYPE_FEATURE]; $i++) {
-            $type = $preferentialTypeSpread->random();
-            $supports = $this->getRandomSupports();
-
-            $this->featureSupportQuestions->push([
                 'supports' => $supports,
                 'type' => $type,
               ]);

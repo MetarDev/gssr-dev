@@ -47,11 +47,12 @@ class CanIUseApi
         // Foreach feature, update or create a new Feature model.
         DB::beginTransaction();
         $allBrowsers = Browser::get()->map(fn(Browser $browser) => $browser->only(['id', 'key', 'version']));
-        $features->each(function (array $rawFeature) use ($allBrowsers) {
+        $features->each(function (array $rawFeature, string $key) use ($allBrowsers) {
             [$primaryCategory, $secondaryCategory] = $this->mapCategoriesToCategory($rawFeature['categories']);
             $feature = Feature::updateOrCreate(
-                [ 'title' => $rawFeature['title'] ],
+                [ 'short_title' => $key ],
                 [
+                    'short_title' => $key,
                     'title' => $rawFeature['title'],
                     'description' => $rawFeature['description'],
                     'primary_category' => $primaryCategory,
@@ -122,6 +123,7 @@ class CanIUseApi
                         'abbr' => $rawBrowser['abbr'],
                         'prefix' => $rawBrowser['prefix'],
                         'version' => $rawVersion['version'],
+                        'year' => date('Y', $rawVersion['release_date']),
                         'type' => $rawBrowser['type'],
                         'hash' => $hash,
                         'usage_global' => (float) $rawVersion['global_usage'],

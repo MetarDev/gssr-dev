@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('features', function (Blueprint $table) {
             $categoryMaxLength = 16;
             $table->id();
+            $table->string('short_title')->unique();
             $table->string('title')->unique();
             $table->longText('description');
             $table->string('primary_category', $categoryMaxLength); // "cats" in caniuse dataset, already mapped to main category so "CSS" instead of "CSS3"
