@@ -85,17 +85,11 @@ const AnswerPopup = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      size={"xl"}
       closeOnOverlayClick={false}
     >
       <ModalOverlay />
-      <ModalContent
-        backgroundColor={colorMode === "dark" ? "gray.800" : "gray.200"}
-        margin={"auto"}
-        borderRadius={8}
-        overflow={"hidden"}
-      >
-        <ModalHeader padding={8} fontSize={28}>
+      <ModalContent>
+        <ModalHeader>
           <Flex alignItems={"center"}>
             <Text as="span" marginRight={2} flexWrap="wrap">
               {isTimeout ? "Time's up!" : "You guessed: "}
@@ -152,7 +146,7 @@ const AnswerPopup = ({
             </Table>
           </TableContainer>
         </ModalBody>
-        <ModalFooter marginTop={8}>
+        <ModalFooter>
           <Button
             onClick={
               isAnswerRevealed
