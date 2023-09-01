@@ -22,28 +22,29 @@ export default function QuizSplashScreen({
   url: string;
   onStartQuiz: () => void;
 }) {
+  const maxWidth = "128px";
   return (
     <VStack
       align={"left"}
       spacing={{ base: 8, md: 12 }}
-      maxW={"xl"}
+      maxW={"4xl"}
       alignItems={"flex-start"}
     >
       <Heading size={"2xl"}>Quiz summary:</Heading>
       <StyledCard>
         <TableContainer>
-          <Table variant="simple" style={{ "borderCollapse": "collapse", tableLayout: "fixed" }}>
+          <Table variant="simple" layout={{ base: "fixed", md: "auto" }}>
             <Tbody>
               <Tr>
-                <Td>Timer:</Td>
+                <Td width={{ base: maxWidth, md: "auto" }}>Timer:</Td>
                 <Td>{timer}s / question</Td>
               </Tr>
               <Tr>
-                <Td>Questions:</Td>
+                <Td width={{ base: maxWidth, md: "auto" }}>Questions:</Td>
                 <Td>{questions.length}</Td>
               </Tr>
               <Tr>
-                <Td>
+                <Td width={{ base: maxWidth, md: "auto" }}>
                   URL: <CopyToClipboard toCopy={url} />
                 </Td>
                 <Td>
