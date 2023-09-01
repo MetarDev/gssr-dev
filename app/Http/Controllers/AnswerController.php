@@ -17,10 +17,9 @@ class AnswerController extends Controller
      * @param Question $question
      * @return Collection
      */
-    public function buildAnswersForQuestion(array $answerIds, string $modelClass): Collection
+    public function buildAnswersForQuestion(Collection $models): Collection
     {
-        $models = $modelClass::whereIn('id', $answerIds)->get();
-        return $models->map(fn($model) => $this->buildAnswerFromModel($model));
+        return $models->map([$this, 'buildAnswerFromModel']);
     }
 
     /**
@@ -41,6 +40,7 @@ class AnswerController extends Controller
             $titleLong = $model->title;
             $description = $model->description;
         }
+
         return Answer::make([
             'id' => $model->id,
             'title' => $title,

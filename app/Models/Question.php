@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 
 class Question extends Model
 {
@@ -20,6 +21,13 @@ class Question extends Model
     public const NOT_SUPPORTED = 'not_supported';
 
     public const DEFAULT_ANSWER_COUNT = 4;
+
+    /**
+     * Collection of answers objects for the question (either Feature or Browser models.)
+     *
+     * @var Collection
+     */
+    public $answerObjects;
 
     /**
      * Guarded properties that can't be saved over.
