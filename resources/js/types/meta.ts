@@ -3,4 +3,6 @@ export interface Metadata {
     url: string;
     description: string;
     image: string;
+    ogImage?: string,
+    twitterImage?: string,
 }
