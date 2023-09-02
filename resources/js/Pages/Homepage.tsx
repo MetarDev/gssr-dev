@@ -33,7 +33,7 @@ export default function Homepage({
           maxW={"xl"}
           alignItems={"flex-start"}
         >
-          <Heading variant={"main-heading"} size={"4xl"}>
+          <Heading variant={"main-heading"} size={"3xl"}>
             Do you know your <HighlightText>frontend</HighlightText> feature
             support?
           </Heading>
