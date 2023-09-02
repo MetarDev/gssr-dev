@@ -22,7 +22,7 @@ const QuestionTitle = ({
   } = {
     as: "h1",
     marginBottom: 6,
-    size: { base: "md" },
+    size: { base: "lg" },
   };
 
 	switch(question.type) {
@@ -34,7 +34,7 @@ const QuestionTitle = ({
 
 			return (
 				<Heading {...headingProps}>
-					Which {featureSupportData.subjectType.toUpperCase()} feature <HighlightSupports condition={featureSupportData.isSupported} supportsText="is" notSupportsText="is not" /> supported by <Code style={{ fontSize: "inherit"}}>{featureSupportData.browserName} {featureSupportData.browserVersion}</Code> ({featureSupportData.browserYear})
+					Which {featureSupportData.subjectType.toUpperCase()} feature <HighlightSupports condition={featureSupportData.isSupported} supportsText="is" notSupportsText="is not" /> supported by <Code style={{ fontSize: "inherit"}}>{featureSupportData.browserName} {featureSupportData.browserVersion}</Code> ({featureSupportData.browserYear})?
 				</Heading>
 			);
 		case "browser_support":
@@ -44,7 +44,7 @@ const QuestionTitle = ({
 
 			return (
 				<Heading {...headingProps}>
-					Which {browserSupportData.subjectType} browser <HighlightSupports condition={browserSupportData.isSupported} supportsText="supports" notSupportsText="does not support" /> <Code style={{ fontSize: "inherit"}}>{browserSupportData.featureShortName}</Code> {`(${browserSupportData.featureFullName})`}
+					Which browser <HighlightSupports condition={browserSupportData.isSupported} supportsText="supports" notSupportsText="does not support" /> <Code style={{ fontSize: "inherit"}}>{browserSupportData.featureShortName}</Code> {`(${browserSupportData.featureFullName})`}?
 				</Heading>
 			);
 		case "usage_global":

@@ -43,7 +43,7 @@ export default function Homepage({
             trivia quiz!
           </Text>
 
-          <Button as={Link} href="/quiz">Start quiz!</Button>
+          <Button colorScheme="green" as={Link} href="/quiz">Start quiz!</Button>
         </VStack>
       </Stack>
     </DefaultLayout>

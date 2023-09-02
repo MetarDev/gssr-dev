@@ -41,7 +41,7 @@ const ShareQuizCta = ({
         <VStack
           align={"center"}
           spacing={8}
-          alignItems={"flex-start"}
+          alignItems={{base: "center", md: "flex-start"}}
           justifyContent={"center"}
         >
           <Heading>
@@ -49,7 +49,7 @@ const ShareQuizCta = ({
           </Heading>
           <Text
             color={"brandTextDefault"}
-            alignSelf={{ base: "flex-start", sm: "center" }}
+            textAlign={{ base: "left", sm: "center", md: "left" }}
             maxW={"2xl"}
           >
             Don't keep your quiz success to yourself! Flaunt your guessing-game
