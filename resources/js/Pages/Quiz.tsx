@@ -38,8 +38,6 @@ export default function QuizPage({
     onNextQuestion,
   } = useQuiz({ quiz, questions });
 
-  console.log(questions);
-
   return (
     <DefaultLayout justifyContent="center" title="Quiz">
       {!hasStarted && (
