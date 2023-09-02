@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Metadata;
 use Inertia\Inertia;
 
 class BasicPageController extends Controller
@@ -16,6 +17,12 @@ class BasicPageController extends Controller
      */
     public function cookiePolicy()
     {
-        return Inertia::render('CookiePolicy');
+        return Inertia::render('CookiePolicy', [
+            'metadata' => Metadata::generatePageMetadata([
+                'title' => 'Cookie Policy',
+                'description' => 'Cookie policy detailing how cookies are used.',
+                'image' => '',
+            ]),
+        ]);
     }
 }

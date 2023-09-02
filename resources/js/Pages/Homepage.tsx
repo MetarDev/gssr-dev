@@ -10,16 +10,18 @@ import {
 } from "@chakra-ui/react";
 import { HighlightText } from "@/Components/HighlightText";
 import DefaultLayout from "@/Layouts/DefaultLayout";
+import { Metadata } from "@/types/meta";
 
 export default function Homepage({
   auth,
   laravelVersion,
   phpVersion,
-}: PageProps<{ laravelVersion: string; phpVersion: string }>) {
+  metadata,
+}: PageProps<{ laravelVersion: string; phpVersion: string, metadata: Metadata }>) {
   const { colorMode } = useColorMode();
 
   return (
-    <DefaultLayout justifyContent="center" title="Support Guesser">
+    <DefaultLayout justifyContent="center" metadata={metadata}>
       <Stack
         spacing={12}
         direction={{ base: "column", xl: "row" }}

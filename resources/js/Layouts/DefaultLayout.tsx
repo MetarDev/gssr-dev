@@ -1,20 +1,21 @@
 import { Footer } from "@/Components/Global/Footer";
 import { Header } from "@/Components/Global/Header";
+import { PageHead } from "@/Components/Global/PageHead";
+import { Metadata } from "@/types/meta";
 import { Box, Container } from "@chakra-ui/react";
-import { Head } from "@inertiajs/react";
 import React from "react";
 
 const DefaultLayout = ({
-  title,
   children,
   justifyContent = "flex-start",
+  metadata,
 }: {
-  title: string;
   children: React.ReactNode;
   justifyContent?: string;
+  metadata: Metadata,
 }) => (
   <>
-    <Head title={title} />
+    <PageHead meta={metadata} />
     <Header></Header>
     <Container
       maxW={"container.xl"}

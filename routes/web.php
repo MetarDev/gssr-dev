@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\Metadata;
 use App\Http\Controllers\BasicPageController;
 use App\Http\Controllers\QuizController;
 use Illuminate\Foundation\Application;
@@ -23,6 +24,11 @@ Route::get('/', function () {
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'metadata' => Metadata::generatePageMetadata([
+            'title' => config('app.name'),
+            'description' => 'Test your frontend feature support knowledge!',
+            'image' => '',
+        ]),
     ]);
 });
 

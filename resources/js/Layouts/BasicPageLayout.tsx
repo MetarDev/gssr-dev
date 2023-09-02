@@ -1,18 +1,22 @@
 import { Footer } from "@/Components/Global/Footer";
 import { Header } from "@/Components/Global/Header";
+import { PageHead } from "@/Components/Global/PageHead";
+import { Metadata } from "@/types/meta";
 import { Container, Divider, Heading, VStack } from "@chakra-ui/react";
-import { Head } from "@inertiajs/react";
 import React from "react";
 
-const DefaultLayout = ({
-  title,
+const BasicPageLayout = ({
   children,
+  meta,
+  meta: {
+    title,
+  }
 }: {
-  title: string;
+  meta: Metadata
   children: React.ReactNode;
 }) => (
   <>
-    <Head title={title} />
+    <PageHead meta={meta} />
     <Header></Header>
     <Container
       maxW={"container.xl"}
@@ -46,4 +50,4 @@ const DefaultLayout = ({
   </>
 );
 
-export default DefaultLayout;
+export default BasicPageLayout;

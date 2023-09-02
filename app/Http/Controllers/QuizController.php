@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Metadata;
 use App\Models\Question;
 use App\Models\Quiz;
 use Illuminate\Support\Facades\Request;
@@ -52,7 +53,11 @@ class QuizController extends Controller
         return Inertia::render('Quiz', [
             'quiz' => $quiz,
             'questions' => $questions,
-            'url' => Request::url(),
+            'metadata' => Metadata::generatePageMetadata([
+                'title' => config('app.name') . " - Quiz $quiz->slug",
+                'description' => "Quiz of mixed browser / feature / global support questions.",
+                'image' => '',
+            ])
         ]);
     }
     /**

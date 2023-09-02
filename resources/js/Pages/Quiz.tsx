@@ -8,17 +8,19 @@ import Question from "@/Components/Quiz/Question";
 import QuestionTitle from "@/Components/Quiz/QuestionTitle";
 import AnswerPopup from "@/Components/Quiz/AnswerPopup";
 import QuizSummary from "@/Components/Quiz/QuizSummary";
+import { Metadata } from "@/types/meta";
 
 export default function QuizPage({
   auth,
   quiz,
   questions,
-  url,
+  metadata,
+  metadata: { url }
 }: PageProps<{
   slug: string;
   quiz: Quiz;
   questions: QuestionInterface[];
-  url: string;
+  metadata: Metadata,
 }>) {
   const {
     timer,
@@ -39,7 +41,7 @@ export default function QuizPage({
   } = useQuiz({ quiz, questions });
 
   return (
-    <DefaultLayout justifyContent="center" title="Quiz">
+    <DefaultLayout justifyContent="center" metadata={metadata}>
       {!hasStarted && (
         <QuizSplashScreen
           quiz={quiz}
