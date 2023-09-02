@@ -69,9 +69,9 @@ export const useQuiz = ({
       totalQuestions: (quizSummary?.totalQuestions || 0) + 1,
       timeSpent: (quizSummary?.timeSpent || 0) + (questionSummary?.timeSpent || 0),
       timeTotal: (quizSummary?.timeTotal || 0) + quiz.timer,
-      avgTimePerQuestion: quizSummary ? quizSummary.questions.reduce((acc, question) => {
+      avgTimePerQuestion: parseFloat((quizSummary ? quizSummary.questions.reduce((acc, question) => {
         return acc + question.timeSpent;
-      }, 0) / quizSummary.questions.length : 0,
+      }, 0) / quizSummary.questions.length : 0).toFixed(2)),
       maxScore: calculateMaxScore(quiz),
     });
   }

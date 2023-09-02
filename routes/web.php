@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BasicPageController;
 use App\Http\Controllers\QuizController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +31,8 @@ Route::get('/quiz', function () {
 });
 Route::get('/quiz', [QuizController::class, 'index'])->name('quiz');
 Route::get('/quiz/{slug}', [QuizController::class, 'indexSpecificQuiz'])->name('specific-quiz');
+
+Route::get('/cookie-policy', [BasicPageController::class, 'cookiePolicy'])->name('cookie-policy');
 
 // Not part of MVP
 // ---

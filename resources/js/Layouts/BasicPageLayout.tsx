@@ -1,17 +1,15 @@
 import { Footer } from "@/Components/Global/Footer";
 import { Header } from "@/Components/Global/Header";
-import { Box, Container } from "@chakra-ui/react";
+import { Container, Divider, Heading, VStack } from "@chakra-ui/react";
 import { Head } from "@inertiajs/react";
 import React from "react";
 
 const DefaultLayout = ({
   title,
   children,
-  justifyContent = "flex-start",
 }: {
   title: string;
   children: React.ReactNode;
-  justifyContent?: string;
 }) => (
   <>
     <Head title={title} />
@@ -19,16 +17,13 @@ const DefaultLayout = ({
     <Container
       maxW={"container.xl"}
       minHeight={{ base: "body_height", lg: "body_height_lg" }}
-      display={"flex"}
-      flexDirection={"column"}
-      justifyContent={justifyContent}
       marginTop={{
-        base: "content_vertical_spacing",
-        lg: "content_vertical_spacing_lg",
+        base: "basic_page_vertical_spacing",
+        lg: "basic_page_vertical_spacing_lg",
       }}
       marginBottom={{
-        base: "content_vertical_spacing",
-        lg: "content_vertical_spacing_lg",
+        base: "basic_page_vertical_spacing",
+        lg: "basic_page_vertical_spacing_lg",
       }}
       paddingLeft={{
         base: "content_horizontal_spacing",
@@ -39,7 +34,13 @@ const DefaultLayout = ({
         lg: "content_horizontal_spacing_lg",
       }}
     >
-      {children}
+      <VStack spacing={{ base: 8, lg: 16 }} alignItems={"flex-start"}>
+        <Heading as="h1">{title}</Heading>
+        <Divider />
+        <VStack spacing={{ base: 4, lg: 8 }} alignItems={"flex-start"}>
+          {children}
+        </VStack>
+      </VStack>
     </Container>
     <Footer />
   </>
