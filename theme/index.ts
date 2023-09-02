@@ -68,6 +68,20 @@ const theme = {
         size: "xl"
       },
     }),
+    Link: {
+      variants: {
+        // you can name it whatever you want
+        primary: () => ({
+          color: `primaryLink`,
+          _hover: {
+            color: 'primaryLinkHover'
+          },
+        }),
+      },
+      defaultProps: {
+        variant: 'primary',
+      },
+    }
   },
   /*
 	export const foundations = {
@@ -95,6 +109,14 @@ const theme = {
         default: "gray.600",
         _dark: "gray.400",
       },
+      primaryLink: {
+        default: "orange.700",
+        _dark: "orange.300",
+      },
+      primaryLinkHover: {
+        default: "orange.600",
+        _dark: "orange.200",
+      }
     },
     sizes: {
       header_height: "72px",
@@ -107,6 +129,8 @@ const theme = {
       content_vertical_spacing_lg: 16,
       content_horizontal_spacing: 8,
       content_horizontal_spacing_lg: 16,
+      basic_page_vertical_spacing: 16,
+      basic_page_vertical_spacing_lg: 32,
     },
     minHeight: {},
   },
@@ -123,6 +147,7 @@ export default extendTheme(
       "Radio",
       "Code",
       "Progress",
+      "Link"
     ],
   }),
   withDefaultProps({
