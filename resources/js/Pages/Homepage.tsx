@@ -25,7 +25,7 @@ export default function Homepage({
       <Stack
         spacing={12}
         direction={{ base: "column", xl: "row" }}
-        alignItems={"center"}
+        alignItems={{ base: "flex-start", xl: "center"}}
       >
         <VStack
           align={"left"}
