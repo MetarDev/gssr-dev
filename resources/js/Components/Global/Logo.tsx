@@ -1,6 +1,6 @@
 import { useColorMode } from "@chakra-ui/react";
 
-export const Logo = ({ size = 48 }) => {
+export const Logo = ({ size = 42 }) => {
   const { colorMode } = useColorMode();
 
   const defaultRowColor = colorMode === "dark" ? "var(--chakra-colors-orange-100)" : "var(--chakra-colors-orange-900)";
