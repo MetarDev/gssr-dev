@@ -30,12 +30,10 @@ task('upload', function () {
     upload(__DIR__ . "/public/build", '{{release_path}}/public');
 });
 
-task('clear_op_cache', function() {
-    opcache_reset();
-});
+task('artisan:restart-php-fpm', artisan('app:restart-php-fpm'));
 
-after('deploy:vendors', 'buildVite');
-after('deploy:publish', 'upload');
+after('deploy:prepare', 'buildVite');
+after('deploy:prepare', 'upload');
 
 after('deploy:failed', 'deploy:unlock');
-after('success', 'clear_op_cache');
+after('deploy:success', 'artisan:restart-php-fpm');
