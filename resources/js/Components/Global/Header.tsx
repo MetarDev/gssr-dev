@@ -28,7 +28,7 @@ export const Header = () => {
 					<Link href="/">
             <Flex alignItems={"center"}>
               <Logo />
-              <Text marginLeft={2} fontWeight={"bold"} color={colorMode === 'dark' ? "orange.100" : "black"}>GUESS.DEV</Text>
+              <Text marginLeft={2} fontWeight={"bold"} color={colorMode === 'dark' ? "orange.100" : "black"}>GUESS.DEV1</Text>
             </Flex>
           </Link>
 					<ColorModeSwitcher />
