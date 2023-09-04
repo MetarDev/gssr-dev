@@ -50,7 +50,12 @@ class GenerateQuizzes extends Command
         $isDryRun = $this->option('dry-run');
         $timeStart = microtime(true);
         $this->info(sprintf('Starting quiz generation %s', $isDryRun ? '(dry run)' : ''));
-        $timings = $this->quizGenerator->generateRandom($count, Quiz::DEFAULT_TIMER, $isDryRun);
+        try {
+            $timings = $this->quizGenerator->generateRandom($count, Quiz::DEFAULT_TIMER, $isDryRun);
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+            return;
+        }
         $this->info('Timings:');
         foreach ($timings as $key => $timing) {
             $this->line(sprintf('--- %s: %ss', $key, round($timing, 3)));

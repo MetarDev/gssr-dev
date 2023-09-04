@@ -6,11 +6,9 @@ namespace App\Logic;
 use App\Helpers\Hasher;
 use App\Http\Controllers\BrowserController;
 use App\Http\Controllers\FeatureController;
-use App\Models\Browser;
 use App\Models\Feature;
 use App\Models\Question;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class QuestionGenerator
 {
@@ -91,6 +89,11 @@ class QuestionGenerator
             $correctAnswerId,
             $browser->id
         );
+
+        unset($browser);
+        unset($supportedFeatureIds);
+        unset($unsupportedFeatureIds);
+        unset($incorrectAnswers);
         return $question;
     }
 
@@ -115,12 +118,11 @@ class QuestionGenerator
             }
 
             // Continue of not enough answers
-            if (
-                ($supports === Question::SUPPORTED && $supportedBrowsers->count() === 0) ||
+            if (($supports === Question::SUPPORTED && $supportedBrowsers->count() === 0) ||
                 ($supports !== Question::SUPPORTED && $unsupportedBrowsers->count() === 0)
             ) {
-                continue;
                 $counter++;
+                continue;
             }
 
             // Probably needs a better method for generating questions but let's go with random for now.
@@ -136,11 +138,10 @@ class QuestionGenerator
 
         // Get incorrect answers by making sure each answer is a different browser.
         $incorrectAnswers = $incorrectAnswersByBrowser->shuffle()->take(3)->map(function ($browserGroup) {
-            // \Illuminate\Support\Facades\Log::info(print_r($browserGroup, true));
             return $browserGroup->random();
         })->pluck('id')->toArray();
 
-        return $this->generateQuestion(
+        $question = $this->generateQuestion(
             Question::TYPE_BROWSER,
             $supports,
             $browserType,
@@ -148,6 +149,14 @@ class QuestionGenerator
             $correctAnswer->id,
             $feature->id
         );
+
+        unset($feature);
+        unset($supportedBrowsers);
+        unset($unsupportedBrowsers);
+        unset($incorrectAnswersByBrowser);
+        unset($incorrectAnswers);
+
+        return $question;
     }
 
     /**
@@ -186,6 +195,10 @@ class QuestionGenerator
             $incorrectAnswers,
             $correctAnswerId
         );
+
+        unset($features);
+        unset($incorrectAnswers);
+
         return $question;
     }
 

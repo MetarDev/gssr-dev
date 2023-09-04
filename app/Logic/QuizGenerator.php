@@ -28,6 +28,13 @@ class QuizGenerator
     private questionGenerator $questionGenerator;
 
     /**
+     * Batches writing of quizzed (and questions) into batches of $batches
+     *
+     * @var integer
+     */
+    private $batches = 10;
+
+    /**
      * Constructor.
      *
      * @param QuizController $quizController
@@ -58,16 +65,24 @@ class QuizGenerator
         }
 
         // Generate quiz and questions for each quiz.
-        DB::beginTransaction();
         $total_time = 0;
         $browser_total = 0;
         $feature_total = 0;
         $global_total = 0;
-        $quizzes->each(function (QuizOverview $quizOverview) use ($timer, $answersCount, &$total_time, &$browser_total, &$feature_total, &$global_total) {
+        $counter = 0;
+        $quizzes->each(function (QuizOverview $quizOverview) use ($timer, $answersCount, &$total_time, &$browser_total, &$feature_total, &$global_total, &$counter, $isDryRun) {
+
+            // Start timer.
             $logic_time_start = microtime(true);
+            $browser_start = microtime(true);
+
+            // Start the transaction
+            if ($counter === 0 && !$isDryRun) {
+                DB::beginTransaction();
+            }
+
             $questions = collect([]);
 
-            $browser_start = microtime(true);
             $quizOverview->browserSupportQuestions->each(function (array $params) use (&$questions, $answersCount) {
                 $questions->push($this->questionGenerator->generateBrowserSupportQuestion(
                     $params['type'],
@@ -118,14 +133,19 @@ class QuizGenerator
                     'questions' => $questions->shuffle()->pluck('id'),
                 ]
             );
+
+            // Let's commit in batches.
+            $counter++;
+            if (!$isDryRun && $counter >= $this->batches) {
+                $counter = 0;
+                DB::commit();
+            }
         });
 
-        $db_start = microtime(true);
-        if (!$isDryRun) {
+        if (!$isDryRun && DB::transactionLevel() > 0) {
             DB::commit();
-        } else {
-            DB::rollBack();
         }
+        $db_start = microtime(true);
         $db_end = microtime(true) - $db_start;
 
         return [
