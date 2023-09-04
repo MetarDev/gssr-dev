@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Container, Flex, Text, useColorMode } from "@chakra-ui/react";
+import { Code, Container, Flex, Text, useColorMode } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { Link } from "@inertiajs/react";
 import { Logo } from "./Logo";
@@ -28,7 +28,7 @@ export const Header = () => {
 					<Link href="/">
             <Flex alignItems={"center"}>
               <Logo />
-              <Text marginLeft={4}>GUESS.DEV</Text>
+              <Text marginLeft={2} fontWeight={"bold"} color={colorMode === 'dark' ? "orange.100" : "black"}>GUESS.DEV</Text>
             </Flex>
           </Link>
 					<ColorModeSwitcher />

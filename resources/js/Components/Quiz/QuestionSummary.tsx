@@ -49,7 +49,7 @@ const QuestionSummary = ({
         {!questionSummary.answeredCorrectly && (
           <CloseIcon color={closeIconColor} />
         )}
-        <Heading size={"sm"} color={"brandTextLight"}>
+        <Heading size={"md"} color={"brandTextLight"}>
           Question #{index + 1} -{" "}
           {questionSummary.answeredCorrectly ? "Correct" : "Incorrect"}
         </Heading>

@@ -10,8 +10,8 @@ const HighlightSupports = ({
   notSupportsText: string;
 }) => {
   const { colorMode } = useColorMode();
-  const supportsColor = colorMode === "dark" ? "green.300" : "green.700";
-  const notSupportsColor = colorMode === "dark" ? "red.300" : "red.700";
+  const supportsColor = colorMode === "dark" ? "green.300" : "green.600";
+  const notSupportsColor = colorMode === "dark" ? "red.300" : "red.600";
   return (
     <Text
       as="span"

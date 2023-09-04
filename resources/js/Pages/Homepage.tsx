@@ -25,7 +25,7 @@ export default function Homepage({
       <Stack
         spacing={12}
         direction={{ base: "column", xl: "row" }}
-        alignItems={"center"}
+        alignItems={{ base: "flex-start", xl: "center"}}
       >
         <VStack
           align={"left"}
@@ -33,7 +33,7 @@ export default function Homepage({
           maxW={"xl"}
           alignItems={"flex-start"}
         >
-          <Heading variant={"main-heading"} size={"4xl"}>
+          <Heading variant={"main-heading"} size={"3xl"}>
             Do you know your <HighlightText>frontend</HighlightText> feature
             support?
           </Heading>
@@ -43,7 +43,7 @@ export default function Homepage({
             trivia quiz!
           </Text>
 
-          <Button as={Link} href="/quiz">Start quiz!</Button>
+          <Button colorScheme="green" as={Link} href="/quiz">Start quiz!</Button>
         </VStack>
       </Stack>
     </DefaultLayout>

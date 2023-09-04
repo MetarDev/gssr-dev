@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Images;
 use App\Helpers\Metadata;
-use App\Models\Question;
 use App\Models\Quiz;
-use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
 
@@ -56,7 +55,7 @@ class QuizController extends Controller
             'metadata' => Metadata::generatePageMetadata([
                 'title' => config('app.name') . " - Quiz $quiz->slug",
                 'description' => "Quiz of mixed browser / feature / global support questions.",
-                'image' => '',
+                'image' => Images::resolve('quiz-1200x630.png'),
             ])
         ]);
     }

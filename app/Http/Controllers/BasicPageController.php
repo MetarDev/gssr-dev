@@ -21,7 +21,6 @@ class BasicPageController extends Controller
             'metadata' => Metadata::generatePageMetadata([
                 'title' => 'Cookie Policy',
                 'description' => 'Cookie policy detailing how cookies are used.',
-                'image' => '',
             ]),
         ]);
     }

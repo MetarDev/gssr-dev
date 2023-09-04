@@ -11,6 +11,7 @@ import {
   Button,
   Code,
   Flex,
+  Heading,
   Modal,
   ModalBody,
   ModalContent,
@@ -91,9 +92,9 @@ const AnswerPopup = ({
       <ModalContent>
         <ModalHeader>
           <Flex alignItems={"center"}>
-            <Text as="span" marginRight={2} flexWrap="wrap">
+            <Heading marginRight={2} flexWrap="wrap" color={"brandTextLight"} size="lg" as="h2">
               {isTimeout ? "Time's up!" : "You guessed: "}
-            </Text>
+            </Heading>
             {isAnswerRevealed && answer && (
               <HighlightText colorScheme={answer.isCorrect ? "green" : "red"}>
                 {answer.isCorrect ? "Wisely" : "Poorly"}
