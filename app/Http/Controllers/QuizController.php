@@ -36,7 +36,12 @@ class QuizController extends Controller
     public function index()
     {
         // Get a random quizSlug (faster / more efficient then doing inRandomOrder)
-        $slug = Quiz::get('slug')->random(1)->pluck('slug')->first();
+        // $slug = Quiz::get('slug')->random(1)->pluck('slug')->first();
+
+        // Get a random quizSLug by getting the max quiz ID and then picking a random number between 1 and max.
+        // Does 2 queries but negligible amount of memory compared to getting all slugs and then picking one.
+        $slug = Quiz::where('id', rand(1, Quiz::max('id')))->pluck('slug')->first();
+
         return redirect("/quiz/$slug");
     }
 
@@ -48,7 +53,7 @@ class QuizController extends Controller
     public function indexSpecificQuiz(string $slug)
     {
         $quiz = Quiz::where('slug', $slug)->firstOrFail();
-        $questions = $this->questionController->buildQuestionsForQuiz($quiz);
+        $questions = $this->questionController->buildQuestionsForQuiz($quiz)->shuffle();
         return Inertia::render('Quiz', [
             'quiz' => $quiz,
             'questions' => $questions,
