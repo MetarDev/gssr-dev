@@ -105,6 +105,7 @@ class QuestionGenerator
     {
         $counter = 0;
         do {
+            $incorrectAnswersByBrowser = collect([]);
             $feature = $this->getAllRelevantFeatures()->random();
             $supportedBrowsers = $feature->getSupportedBrowsersByType($browserType);
             $unsupportedBrowsers = $feature->getUnsupportedBrowsersByType($browserType);
@@ -112,6 +113,16 @@ class QuestionGenerator
             if ($counter > self::MAX_GENERATE_QUESTIONS_LOOP) {
                 return null;
             }
+
+            // Continue of not enough answers
+            if (
+                ($supports === Question::SUPPORTED && $supportedBrowsers->count() === 0) ||
+                ($supports !== Question::SUPPORTED && $unsupportedBrowsers->count() === 0)
+            ) {
+                continue;
+                $counter++;
+            }
+
             // Probably needs a better method for generating questions but let's go with random for now.
             $correctAnswer = $supports === Question::SUPPORTED ? $supportedBrowsers->random() : $unsupportedBrowsers->random();
 
@@ -125,6 +136,7 @@ class QuestionGenerator
 
         // Get incorrect answers by making sure each answer is a different browser.
         $incorrectAnswers = $incorrectAnswersByBrowser->shuffle()->take(3)->map(function ($browserGroup) {
+            // \Illuminate\Support\Facades\Log::info(print_r($browserGroup, true));
             return $browserGroup->random();
         })->pluck('id')->toArray();
 
