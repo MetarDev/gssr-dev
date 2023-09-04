@@ -27,7 +27,6 @@ Route::get('/', function () {
         'metadata' => Metadata::generatePageMetadata([
             'title' => config('app.name'),
             'description' => 'Test your frontend feature support knowledge!',
-            'image' => '',
         ]),
     ]);
 });
