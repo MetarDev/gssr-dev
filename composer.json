@@ -14,6 +14,7 @@
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
+        "deployer/deployer": "^7.3",
         "fakerphp/faker": "^1.9.1",
         "fossbarrow/laravel-phpcs": "dev-main",
         "itsgoingd/clockwork": "^5.1",
