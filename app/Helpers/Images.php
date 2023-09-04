@@ -2,8 +2,6 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Facades\Request as FacadesRequest;
-
 class Images
 {
     /**
