@@ -14,7 +14,7 @@ add('shared_dirs', []);
 add('writable_dirs', []);
 
 // Hosts
-host('guess.dev')
+host('gssr.dev')
     ->set('remote_user', 'ivan.grginov')
     ->set('deploy_path', '~/public_html');
 

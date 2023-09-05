@@ -8,7 +8,7 @@ const WhatsappShareIcon = ({
   quizUrl,
   quizSummary,
   label = 'Share Quiz on WhatsApp',
-  title = "Just finished a guessDev quiz:",
+  title = "Just finished a gssrDev quiz:",
   beforeUrlText = "Try it out yourself:",
   size = 'md',
 }: {

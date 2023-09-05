@@ -1,4 +1,5 @@
 {
+    "name": "gssr.dev",
     "private": true,
     "type": "module",
     "scripts": {

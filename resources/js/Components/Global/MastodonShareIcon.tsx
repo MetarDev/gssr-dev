@@ -8,7 +8,7 @@ const MastodonShareIcon = ({
   quizUrl,
   quizSummary,
   label = 'Share Quiz on Mastodon',
-  title = "Just finished a %23guessDev quiz:",
+  title = "Just finished a %23gssrDev quiz:",
   beforeUrlText = "Try it out yourself!",
   size = 'md',
 }: {
