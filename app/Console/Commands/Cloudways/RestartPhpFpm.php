@@ -44,7 +44,7 @@ class RestartPhpFpm extends Command
      */
     public function handle()
     {
-        $this->cloudwaysApi->call('POST', '/service/state', $this->fetchAccessToken(), [
+        $this->cloudwaysApi->call('POST', '/service/state', $this->cloudwaysApi->fetchAccessToken(), [
             'server_id' => env('CLOUDWAYS_SERVER_ID'),
             'service' => 'php8.1-fpm',
             'state' => 'restart'

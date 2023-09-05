@@ -44,7 +44,7 @@ class ClearVarnishCache extends Command
      */
     public function handle()
     {
-        $this->cloudwaysApi->call('POST', '/service/varnish', $this->fetchAccessToken(), [
+        $this->cloudwaysApi->call('POST', '/service/varnish', $this->cloudwaysApi->fetchAccessToken(), [
             'server_id' => env('CLOUDWAYS_SERVER_ID'),
             'action' => 'purge',
         ]);
