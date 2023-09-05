@@ -13,7 +13,6 @@ export const PageHead = ({
       <meta property="og:url" content={url} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage || image} />
-
       <meta property="og:type" content="article" />
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -26,29 +25,6 @@ export const PageHead = ({
       <meta itemProp="name" content={title} />
       <meta itemProp="description" content={description} />
       <meta itemProp="image" content={image} />
-
-      {/* Real favicon */}
-      <link
-        rel="apple-touch-icon"
-        sizes="180x180"
-        href="/apple-touch-icon.png"
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="32x32"
-        href="/favicon-32x32.png"
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="16x16"
-        href="/favicon-16x16.png"
-      />
-      <link rel="manifest" href="/site.webmanifest" />
-      <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ed8936" />
-      <meta name="msapplication-TileColor" content="#2a2524" />
-      <meta name="theme-color" content="#2a2524" />
     </Head>
   );
 };
