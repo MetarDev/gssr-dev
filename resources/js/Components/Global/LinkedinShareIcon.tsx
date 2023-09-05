@@ -1,7 +1,9 @@
+import { isMobile } from "@/Helpers/device";
 import { getIconSize } from "@/Helpers/icons";
 import { IconSize } from "@/types/icon-size";
-import { IconButton, Link, Tooltip } from "@chakra-ui/react";
-import { FaLinkedin } from "react-icons/fa";
+import { QuizSummaryInterface } from "@/types/quiz";
+import { IconButton, Link, Tooltip, useColorMode } from "@chakra-ui/react";
+import { FaLinkedin, FaWhatsapp } from "react-icons/fa";
 
 const LinkedinShareIcon = ({
   quizUrl,
@@ -12,7 +14,7 @@ const LinkedinShareIcon = ({
   label?: string;
   size?: IconSize
 }) => {
-  const href = `https://www.facebook.com/sharer/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURI(quizUrl)}&display=popup&ref=plugin&src=share_button`;
+  const href = `https://www.linkedin.com/sharing/share-offsite/?url=${quizUrl}`;
 
   const {iconButtonSize, faIconSize} = getIconSize(size);
 
