@@ -45,16 +45,14 @@ const ShareQuizCta = ({
           justifyContent={"center"}
         >
           <Heading>
-            Challenge Your Peers!
+            Can your peers do better?
           </Heading>
           <Text
             color={"brandTextDefault"}
             textAlign={{ base: "left", sm: "center", md: "left" }}
             maxW={"2xl"}
           >
-            Don't keep your quiz success to yourself! Flaunt your guessing-game
-            by sharing your quiz accomplishment with your social circle and
-            inspire others to take the challenge.
+            Don't keep this quiz to yourself! Find out if your peers can do better (or worse) by sharing it with your social circle.
           </Text>
         </VStack>
         <SimpleGrid spacing={{ base: 4, sm: 8 }} columns={3} flexShrink={0}>
