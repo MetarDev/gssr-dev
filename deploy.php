@@ -31,7 +31,8 @@ task('upload', function () {
 });
 
 task('artisan:clear-config-before-restart', artisan('config:clear'));
-task('artisan:restart-php-fpm', artisan('app:restart-php-fpm'));
+task('artisan:restart-php-fpm', artisan('cloudways:restart-php-fpm'));
+task('artisan:clear-varnish-cache', artisan('cloudways:clear-varnish-cache'));
 
 after('deploy:prepare', 'buildVite');
 after('deploy:prepare', 'upload');
@@ -39,3 +40,4 @@ after('deploy:prepare', 'upload');
 after('deploy:failed', 'deploy:unlock');
 after('deploy:success', 'artisan:clear-config-before-restart');
 after('deploy:success', 'artisan:restart-php-fpm');
+after('deploy:success', 'artisan:clear-varnish-cache');
