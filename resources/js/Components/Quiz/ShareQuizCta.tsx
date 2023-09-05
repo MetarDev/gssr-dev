@@ -50,7 +50,7 @@ const ShareQuizCta = ({
           <Text
             color={"brandTextDefault"}
             textAlign={{ base: "left", sm: "center", md: "left" }}
-            maxW={"2xl"}
+            maxW={"lg"}
           >
             Don't keep this quiz to yourself! Find out if your peers can do better (or worse) by sharing it with your social circle.
           </Text>
