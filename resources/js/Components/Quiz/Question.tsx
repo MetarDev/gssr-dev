@@ -38,12 +38,17 @@ const Question = ({
 
   return (
     <div>
-      <Heading as="h2" textColor={"gray.500"} size="sm" marginBottom={2}>
-        {subtitle}
-      </Heading>
-      <Countdown from={countdownFrom} value={countdownValue} />
+      <Flex alignItems={"center"} gap={4}>
+        <Heading as="h2" textColor={"gray.500"} size="sm" >
+          {subtitle}
+        </Heading>
+        <Countdown from={countdownFrom} value={countdownValue} />
+      </Flex>
       {children}
-      <Divider marginTop={8} marginBottom={8} />
+      <Divider
+        marginTop={{ base: 4, md: 8 }}
+        marginBottom={{ base: 4, md: 8 }}
+      />
       <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8}>
         {answers.map((answer, index) => (
           <Flex key={answer.title} alignItems={"center"}>
