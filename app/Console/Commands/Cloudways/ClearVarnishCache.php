@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Cloudways;
 
 use App\Console\CloudwaysApi;
+use App\Exceptions\CloudwaysApiFailedRequestException;
 use Illuminate\Console\Command;
 
 class ClearVarnishCache extends Command
@@ -44,9 +45,16 @@ class ClearVarnishCache extends Command
      */
     public function handle()
     {
-        $this->cloudwaysApi->call('POST', '/service/varnish', $this->cloudwaysApi->fetchAccessToken(), [
-            'server_id' => env('CLOUDWAYS_SERVER_ID'),
-            'action' => 'purge',
-        ]);
+        try {
+            $this->cloudwaysApi->call('POST', '/service/varnish', $this->cloudwaysApi->fetchAccessToken(), [
+                'server_id' => env('CLOUDWAYS_SERVER_ID'),
+                'action' => 'purge',
+            ]);
+            $this->info('Varnish cache cleared!');
+        } catch (CloudwaysApiFailedRequestException $e) {
+            $this->error("Cloudways API call failed (clearing varnish cache): {$e->getMessage()}");
+        } catch (\Exception $e) {
+            $this->error("Unknown error: {$e->getMessage()}");
+        }
     }
 }

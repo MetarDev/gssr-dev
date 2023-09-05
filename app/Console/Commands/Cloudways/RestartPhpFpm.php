@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Cloudways;
 
 use App\Console\CloudwaysApi;
+use App\Exceptions\CloudwaysApiFailedRequestException;
 use Illuminate\Console\Command;
 
 class RestartPhpFpm extends Command
@@ -44,11 +45,17 @@ class RestartPhpFpm extends Command
      */
     public function handle()
     {
-        $this->cloudwaysApi->call('POST', '/service/state', $this->cloudwaysApi->fetchAccessToken(), [
-            'server_id' => env('CLOUDWAYS_SERVER_ID'),
-            'service' => 'php8.1-fpm',
-            'state' => 'restart'
-        ]);
+        try {
+            $this->cloudwaysApi->call('POST', '/service/state', $this->cloudwaysApi->fetchAccessToken(), [
+                'server_id' => env('CLOUDWAYS_SERVER_ID'),
+                'service' => 'php8.1-fpm',
+                'state' => 'restart'
+            ]);
+            $this->info('PHP FPM restarted!');
+        } catch (CloudwaysApiFailedRequestException $e) {
+            $this->error("Cloudways API call failed (clearing php-fpm): {$e->getMessage()}");
+        } catch (\Exception $e) {
+            $this->error("Unknown error: {$e->getMessage()}");
+        }
     }
-
 }

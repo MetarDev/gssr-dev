@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Exceptions\CloudwaysApiFailedRequestException;
+
 class CloudwaysApi
 {
     /**
@@ -65,7 +67,8 @@ class CloudwaysApi
 
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if ($httpcode != '200') {
-            die('An error occurred code: ' . $httpcode . ' output: ' . substr($output, 0, 10000));
+            curl_close($ch);
+            throw new CloudwaysApiFailedRequestException('An error occurred code: ' . $httpcode . ' output: ' . substr($output, 0, 10000));
         }
         curl_close($ch);
         return json_decode($output);
