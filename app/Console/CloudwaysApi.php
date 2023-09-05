@@ -1,46 +1,19 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console;
 
-use Illuminate\Console\Command;
-
-class RestartPhpFpm extends Command
+class CloudwaysApi
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:restart-php-fpm';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Restarts the PHP FPM on Cloudways';
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
-    {
-        $this->callCloudwaysAPI('POST', '/service/state', $this->fetchAccessToken(), [
-            'server_id' => env('CLOUDWAYS_SERVER_ID'),
-            'service' => 'php8.1-fpm',
-            'state' => 'restart'
-        ]);
-    }
-
     /**
      * Fetches the access token from Cloudways.
      *
      * @return string
      */
-    private function fetchAccessToken(): string
+    public function fetchAccessToken(): string
     {
-        //Fetch Access Token
-        $tokenResponse = $this->callCloudwaysAPI(
+
+        // Fetch Access Token
+        $tokenResponse = $this->call(
             'POST',
             '/oauth/access_token',
             null,
@@ -62,7 +35,7 @@ class RestartPhpFpm extends Command
      * @param array $post
      * @return object
      */
-    private function callCloudwaysAPI($method, $url, $accessToken, $post = [])
+    public function call($method, $url, $accessToken, $post = [])
     {
         $baseURL = 'https://api.cloudways.com/api/v1';
 
