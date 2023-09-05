@@ -7,9 +7,12 @@ import {
   ListItem,
   Text,
   SimpleGrid,
+  useColorMode,
 } from "@chakra-ui/react";
 
 export const Footer = () => {
+  const { colorMode } = useColorMode();
+
   return (
     <footer>
       <Container
@@ -28,6 +31,10 @@ export const Footer = () => {
           justifyContent={"space-between"}
           columns={{ base: 1, md: 2 }}
           spacing={4}
+          borderTop={"1px solid"}
+          borderColor={colorMode === "dark" ? "gray.700" : "gray.300"}
+          paddingTop={4}
+          paddingBottom={4}
         >
           <List>
             <ListItem>
