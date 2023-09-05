@@ -39,8 +39,7 @@ export default function Homepage({
           </Heading>
           <Text>
             Which feature is most / least supported? Which of the listed
-            features does browser X support? Test your knowledge with this fun
-            trivia quiz!
+            features does browser X support? Test your knowledge with this endless quizzes generated from caniuse.com data.
           </Text>
 
           <Button colorScheme="green" as={Link} href="/quiz">Start quiz!</Button>
