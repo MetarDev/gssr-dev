@@ -1,9 +1,7 @@
-import { isMobile } from "@/Helpers/device";
 import { getIconSize } from "@/Helpers/icons";
 import { IconSize } from "@/types/icon-size";
-import { QuizSummaryInterface } from "@/types/quiz";
-import { IconButton, Link, Tooltip, useColorMode } from "@chakra-ui/react";
-import { FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import { IconButton, Link, Tooltip } from "@chakra-ui/react";
+import { FaLinkedin } from "react-icons/fa";
 
 const LinkedinShareIcon = ({
   quizUrl,
