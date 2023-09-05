@@ -1,6 +1,6 @@
 import { Quiz, QuizSummaryInterface } from "@/types/quiz";
 
-const CORRECT_ANSWER_SCORE = 100;
+export const CORRECT_ANSWER_SCORE = 100;
 
 /**
  * Calculate the score for an answer. The timeSpent is a modifier to the score.

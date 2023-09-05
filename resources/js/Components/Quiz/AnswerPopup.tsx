@@ -4,14 +4,13 @@ import {
   QuestionSummaryInterface,
   QuizSummaryInterface,
 } from "@/types/quiz";
-import {
-  ArrowForwardIcon,
-} from "@chakra-ui/icons";
+import { ArrowForwardIcon, InfoIcon } from "@chakra-ui/icons";
 import {
   Button,
   Code,
   Flex,
   Heading,
+  IconButton,
   Modal,
   ModalBody,
   ModalContent,
@@ -24,12 +23,14 @@ import {
   Tbody,
   Td,
   Text,
+  Tooltip,
   Tr,
   useColorMode,
 } from "@chakra-ui/react";
 import { HighlightText } from "../HighlightText";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AnimatedScore from "./AnimatedScore";
+import { CORRECT_ANSWER_SCORE } from "@/Helpers/scoring";
 
 const AnswerPopup = ({
   quizSummary,
@@ -43,8 +44,8 @@ const AnswerPopup = ({
   disableTimeout = false, // for debugging.
   onClose,
 }: {
-  quizSummary: QuizSummaryInterface|null;
-  currentQuestionSummary: QuestionSummaryInterface|null;
+  quizSummary: QuizSummaryInterface | null;
+  currentQuestionSummary: QuestionSummaryInterface | null;
   question: QuestionInterface;
   answer: AnswerInterface | null;
   timeSpent: number;
@@ -56,6 +57,7 @@ const AnswerPopup = ({
 }) => {
   const { colorMode } = useColorMode();
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
+  const initialRef = useRef(null);
 
   useEffect(() => {
     // No need to do anything if we already revealed the answer
@@ -83,16 +85,18 @@ const AnswerPopup = ({
     question.answers.find((a) => a.isCorrect)?.title || "";
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      closeOnOverlayClick={false}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false} initialFocusRef={initialRef}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
           <Flex alignItems={"center"}>
-            <Heading marginRight={2} flexWrap="wrap" color={"brandTextLight"} size="lg" as="h2">
+            <Heading
+              marginRight={2}
+              flexWrap="wrap"
+              color={"brandTextLight"}
+              size="lg"
+              as="h2"
+            >
               {isTimeout ? "Time's up!" : "You guessed: "}
             </Heading>
             {isAnswerRevealed && answer && (
@@ -108,16 +112,31 @@ const AnswerPopup = ({
             <Table variant="simple">
               <Tbody>
                 <Tr>
-                  <Td paddingLeft={{base: 0, md: 4}}>
-                    <Text as="span">Score: </Text>
+                  <Td paddingLeft={{ base: 0, md: 4 }}>
+                    <Text as="span">Score:</Text>
+                    <Tooltip label={`Your receive from ${CORRECT_ANSWER_SCORE} to ${CORRECT_ANSWER_SCORE * 2} for a correct answer depending on how fast your answered.`}>
+                      <IconButton
+                        size={"xs"}
+                        alignSelf={"center"}
+                        marginLeft={"2"}
+                        aria-label={'How score is calculated'}
+                        variant={"ghost"}
+                        colorScheme={"gray"}
+                        icon={<InfoIcon />}
+                      />
+                    </Tooltip>
                   </Td>
                   <Td>
-                    <AnimatedScore current={quizSummary?.score || 0} addition={currentQuestionSummary?.score || 0} isAnimating={isAnswerRevealed} />
+                    <AnimatedScore
+                      current={quizSummary?.score || 0}
+                      addition={currentQuestionSummary?.score || 0}
+                      isAnimating={isAnswerRevealed}
+                    />
                   </Td>
                 </Tr>
                 {!isTimeout && (
                   <Tr>
-                    <Td paddingLeft={{base: 0, md: 4}}>
+                    <Td paddingLeft={{ base: 0, md: 4 }}>
                       <Text as="span">Your answer: </Text>
                     </Td>
                     <Td>
@@ -126,7 +145,7 @@ const AnswerPopup = ({
                   </Tr>
                 )}
                 <Tr>
-                  <Td paddingLeft={{base: 0, md: 4}}>
+                  <Td paddingLeft={{ base: 0, md: 4 }}>
                     <Text as="span">Correct answer: </Text>
                   </Td>
                   <Td>
@@ -135,7 +154,7 @@ const AnswerPopup = ({
                 </Tr>
                 {!isTimeout && (
                   <Tr>
-                    <Td paddingLeft={{base: 0, md: 4}}>
+                    <Td paddingLeft={{ base: 0, md: 4 }}>
                       <Text as="span">Answered in: </Text>
                     </Td>
                     <Td>
@@ -157,6 +176,7 @@ const AnswerPopup = ({
                   }
                 : () => {}
             }
+            ref={initialRef}
             colorScheme={isAnswerRevealed ? "green" : "gray"}
             disabled={!isAnswerRevealed}
           >
