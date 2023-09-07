@@ -13,7 +13,6 @@ class Images
     public static function resolve(string $path): string
     {
         $hash = env('IMAGE_HASH');
-        \Illuminate\Support\Facades\Log::info(print_r($hash, true));
         return config('app.url') . "/img/$path?hash=$hash";
     }
 }
