@@ -1,6 +1,7 @@
+import { Link as InertiaLink } from "@inertiajs/react";
 import { QuestionInterface, Quiz, QuizSummaryInterface } from "@/types/quiz";
 import { Button, Divider, Heading, Link, SimpleGrid, VStack } from "@chakra-ui/react";
-import { CheckIcon, StarIcon, TimeIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, CheckIcon, StarIcon, TimeIcon } from "@chakra-ui/icons";
 import StatsCard from "./StatCard";
 import ShareQuizCta from "./ShareQuizCta";
 import QuestionSummary from "./QuestionSummary";
@@ -27,8 +28,10 @@ export default function QuizSummary({
       alignItems={"center"}
       marginTop={{ base: 8, md: 36 }}
     >
-      <Heading size={"2xl"} marginBottom={8}>
-        You completed the quiz!{" "}
+      <Heading size={"2xl"} marginBottom={8} textAlign={"center"} variant={"main-heading"}>
+        You completed the quiz!
+        <br />
+        <Link href="/quiz">Start another one <ArrowForwardIcon /></Link>
       </Heading>
 
       <SimpleGrid
