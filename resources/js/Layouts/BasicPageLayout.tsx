@@ -39,9 +39,9 @@ const BasicPageLayout = ({
       }}
     >
       <VStack spacing={{ base: 8, lg: 16 }} alignItems={"flex-start"}>
-        <Heading as="h1">{title}</Heading>
+        <Heading as="h1" size="xl" alignSelf={"center"}>{title}</Heading>
         <Divider />
-        <VStack spacing={{ base: 4, lg: 8 }} alignItems={"flex-start"}>
+        <VStack spacing={{ base: 4, lg: 8 }} alignItems={"flex-start"} maxW={"lg"} margin={"auto"} width={"full"}>
           {children}
         </VStack>
       </VStack>
