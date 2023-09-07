@@ -38,6 +38,9 @@ export const Footer = () => {
         >
           <List>
             <ListItem>
+              <Link href={route("about")}>About</Link>
+            </ListItem>
+            <ListItem>
               <Link href={route("cookie-policy")}>Cookie Policy</Link>
             </ListItem>
           </List>

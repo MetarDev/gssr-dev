@@ -2,15 +2,16 @@
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Button, IconButton, useColorMode } from "@chakra-ui/react";
 
-export const ColorModeSwitcher = () => {
+export const ColorModeSwitcher = ({ size }: { size: number }) => {
 	const { colorMode, toggleColorMode } = useColorMode();
+
 	return (
 		<header>
 			<IconButton
         onClick={toggleColorMode}
         variant={"ghost"}
         aria-label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}
-        icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+        icon={colorMode === 'light' ? <MoonIcon boxSize={size} /> : <SunIcon boxSize={size} />}
       />
 		</header>
 	)

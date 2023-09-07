@@ -56,23 +56,23 @@ const ShareQuizCta = ({
           </Text>
         </VStack>
         <SimpleGrid spacing={{ base: 4, sm: 8 }} columns={3} flexShrink={0}>
-          <TwitterShareIcon quizUrl={url} quizSummary={quizSummary} size="lg" />
+          <TwitterShareIcon quizUrl={url} quizSummary={quizSummary} size="xl" />
           <WhatsappShareIcon
             quizUrl={url}
             quizSummary={quizSummary}
-            size="lg"
+            size="xl"
           />
-          <FacebookShareIcon quizUrl={url} size="lg" />
-          <LinkedinShareIcon quizUrl={url} size="lg" />
+          <FacebookShareIcon quizUrl={url} size="xl" />
+          <LinkedinShareIcon quizUrl={url} size="xl" />
           <MastodonShareIcon
             quizUrl={url}
             quizSummary={quizSummary}
-            size="lg"
+            size="xl"
           />
           <CopyToClipboard
             toCopy={url}
             subject="Quiz URL"
-            size="lg"
+            size="xl"
             variant={"solid"}
             marginLeft={0}
           />

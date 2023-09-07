@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { Code, Container, Flex, Text, useColorMode } from "@chakra-ui/react";
-import { ColorModeSwitcher } from "../ColorModeSwitcher";
+import { Container, Flex, Text, useColorMode } from "@chakra-ui/react";
 import { Link } from "@inertiajs/react";
 import { Logo } from "./Logo";
+import { AppMenu } from "./AppMenu";
 
 export const Header = () => {
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -28,10 +28,16 @@ export const Header = () => {
 					<Link href="/">
             <Flex alignItems={"center"}>
               <Logo />
-              <Text marginLeft={2} fontWeight={"bold"} color={colorMode === 'dark' ? "orange.100" : "black"} textTransform={"uppercase"}>GSSR.DEV</Text>
+              <Text
+                marginLeft={2}
+                fontWeight={"bold"}
+                color={colorMode === 'dark' ? "orange.100" : "black"}
+                textTransform={"uppercase"}
+                display={{base: "none", md: "block"}}
+              >GSSR.DEV</Text>
             </Flex>
           </Link>
-					<ColorModeSwitcher />
+          <AppMenu />
 				</Flex>
 			</Container>
 		</header>
