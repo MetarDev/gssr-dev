@@ -81,7 +81,7 @@ export default function QuizSummary({
         />
       ))}
 
-      <Button as={Link} href="/quiz" colorScheme="green" alignSelf={"flex-end"}>
+      <Button as={InertiaLink} href="/quiz" colorScheme="green" alignSelf={"flex-end"}>
         Start another quiz!
       </Button>
     </VStack>
