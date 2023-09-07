@@ -42,7 +42,7 @@ export default function Homepage({
             features does browser X support? Test your knowledge with this endless quizzes generated from caniuse.com data.
           </Text>
 
-          <Button colorScheme="green" as={Link} href="/quiz">Start quiz!</Button>
+          <Button colorScheme="green" as={Link} href="/quiz">Start a random quiz!</Button>
         </VStack>
       </Stack>
     </DefaultLayout>

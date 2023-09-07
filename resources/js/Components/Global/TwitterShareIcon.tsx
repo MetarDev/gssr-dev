@@ -2,7 +2,7 @@ import { getIconSize } from "@/Helpers/icons";
 import { IconSize } from "@/types/icon-size";
 import { QuizSummaryInterface } from "@/types/quiz";
 import { IconButton, Tooltip } from "@chakra-ui/react";
-import { FaTwitter } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 const TwitterShareIcon = ({
   quizUrl,
@@ -43,7 +43,7 @@ const TwitterShareIcon = ({
         aria-label={label}
         colorScheme={"orange"}
         onClick={onClick}
-        icon={<FaTwitter size={faIconSize} />}
+        icon={<FaXTwitter size={faIconSize} />}
       />
     </Tooltip>
   );

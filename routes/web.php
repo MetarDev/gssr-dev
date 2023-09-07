@@ -37,7 +37,9 @@ Route::get('/quiz', function () {
 Route::get('/quiz', [QuizController::class, 'index'])->name('quiz');
 Route::get('/quiz/{slug}', [QuizController::class, 'indexSpecificQuiz'])->name('specific-quiz');
 
+// Basic pages
 Route::get('/cookie-policy', [BasicPageController::class, 'cookiePolicy'])->name('cookie-policy');
+Route::get('/about', [BasicPageController::class, 'about'])->name('about');
 
 // Not part of MVP
 // ---

@@ -31,12 +31,18 @@ const theme = {
         "main-heading": {
           lineHeight: "120%",
         },
+        h2: {
+          marginTop: 10,
+        },
+        h3: {
+          marginTop: 4,
+        }
       },
     },
     Text: {
-      baseStyle: (props: StyleFunctionProps) => ({
-        color: props.colorMode === "dark" ? "gray.400" : "gray.600",
-      }),
+      baseStyle: {
+        color: "brandTextLight",
+      },
     },
     Progress: defineStyleConfig({
       baseStyle: {
@@ -108,6 +114,14 @@ const theme = {
       brandTextLight: {
         default: "gray.600",
         _dark: "gray.400",
+      },
+      brandTextYellow: {
+        default: "yellow.700",
+        _dark: "yellow.300",
+      },
+      brandTextRed: {
+        default: "red.700",
+        _dark: "red.300",
       },
       primaryLink: {
         default: "orange.700",

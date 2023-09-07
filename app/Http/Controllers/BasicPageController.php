@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Metadata;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class BasicPageController extends Controller
 {
@@ -15,13 +16,42 @@ class BasicPageController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function cookiePolicy()
+    public function cookiePolicy(): Response
     {
-        return Inertia::render('CookiePolicy', [
-            'metadata' => Metadata::generatePageMetadata([
-                'title' => 'Cookie Policy',
-                'description' => 'Cookie policy detailing how cookies are used.',
-            ]),
+        return $this->render('CookiePolicy', [
+            'title' => 'Cookie Policy',
+            'description' => 'Cookie policy detailing how cookies are used.',
         ]);
+    }
+
+    /**
+     * Render for the cookie policy page
+     *
+     * @return Response
+     */
+    public function about(): Response
+    {
+        return $this->render('About', [
+            'title' => 'About',
+            'description' => sprintf('About page for %s.', env('APP_NAME')),
+        ]);
+    }
+
+    /**
+     * Render for the basic pages.
+     *
+     * @return Response
+     */
+    private function render(string $templateName, array $metadata, array $additionArgs = []): Response
+    {
+        return Inertia::render(
+            $templateName,
+            array_merge(
+                [
+                    'metadata' => Metadata::generatePageMetadata($metadata),
+                ],
+                $additionArgs
+            )
+        );
     }
 }
