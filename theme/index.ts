@@ -31,12 +31,18 @@ const theme = {
         "main-heading": {
           lineHeight: "120%",
         },
+        h2: {
+          marginTop: 10,
+        },
+        h3: {
+          marginTop: 4,
+        }
       },
     },
     Text: {
-      baseStyle: (props: StyleFunctionProps) => ({
-        color: props.colorMode === "dark" ? "gray.400" : "gray.600",
-      }),
+      baseStyle: {
+        color: "brandTextLight",
+      },
     },
     Progress: defineStyleConfig({
       baseStyle: {

@@ -33,15 +33,15 @@ export default function CookiePolicy({
           </Text>
         </ListItem>
       </UnorderedList>
-      <Heading as="h2" size="lg">🙌 Community</Heading>
+      <Heading as="h2" size="lg" variant="h2">🙌 Community</Heading>
       <Text>We have a community on Discord. Join to discuss the quizzes, suggest new features, report bugs or just hang out: <Link display="inlineBlock" href="https://discord.gg/dCcDSgQq" isExternal>https://discord.gg/dCcDSgQq</Link></Text>
-      <Heading as="h2" size="lg">❔ FAQ</Heading>
-      <Heading as="h3" size="md">How many quizzes are there?</Heading>
+      <Heading as="h2" size="lg" variant="h2">❔ FAQ</Heading>
+      <Heading as="h3" size="md" variant="h3">How many quizzes are there?</Heading>
       <Text>Currently there are ~10,000 different generated Quizzes. While there may be some question overlap, most quizzes have unique questions.</Text>
       <Text>Each quiz has it's own page / unique slug so you can share it with others and they can take that exact same quiz.</Text>
-      <Heading as="h3" size="md">Are the stats / score for a quiz I finish tracked anywhere?</Heading>
+      <Heading as="h3" size="md" variant="h3">Are the stats / score for a quiz I finish tracked anywhere?</Heading>
       <Text>Not yet, tho this feature is in the backlog.</Text>
-      <Heading as="h3" size="md">Can I create my own quiz?</Heading>
+      <Heading as="h3" size="md" variant="h3">Can I create my own quiz?</Heading>
       <Text>Not yet, tho this feature is in the backlog.</Text>
     </BasicPageLayout>
   );

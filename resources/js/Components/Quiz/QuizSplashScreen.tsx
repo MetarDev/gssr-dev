@@ -30,18 +30,18 @@ export default function QuizSplashScreen({
       maxW={"4xl"}
       alignItems={"flex-start"}
     >
-      <Heading size={"2xl"}>Quiz summary:</Heading>
+      <Heading as="h1" size={"2xl"}>Quiz summary:</Heading>
       <StyledCard>
         <TableContainer>
           <Table variant="simple" layout={{ base: "fixed", md: "auto" }}>
             <Tbody>
               <Tr>
                 <Td width={{ base: maxWidth, md: "auto" }}>Timer:</Td>
-                <Td>{timer}s / question</Td>
+                <Td><Text>{timer}s / question</Text></Td>
               </Tr>
               <Tr>
                 <Td width={{ base: maxWidth, md: "auto" }}>Questions:</Td>
-                <Td>{questions.length}</Td>
+                <Td><Text>{questions.length}</Text></Td>
               </Tr>
               <Tr>
                 <Td width={{ base: maxWidth, md: "auto" }}>
