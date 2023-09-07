@@ -49,7 +49,7 @@ const Question = ({
         marginTop={{ base: 4, md: 8 }}
         marginBottom={{ base: 4, md: 8 }}
       />
-      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8}>
+      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={{ base: 4, lg: 8 }}>
         {answers.map((answer, index) => (
           <Flex key={answer.title} alignItems={"center"}>
             <Button
