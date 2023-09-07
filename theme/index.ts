@@ -115,6 +115,14 @@ const theme = {
         default: "gray.600",
         _dark: "gray.400",
       },
+      brandTextYellow: {
+        default: "yellow.700",
+        _dark: "yellow.300",
+      },
+      brandTextRed: {
+        default: "red.700",
+        _dark: "red.300",
+      },
       primaryLink: {
         default: "orange.700",
         _dark: "orange.300",

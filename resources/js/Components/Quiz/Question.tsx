@@ -39,7 +39,7 @@ const Question = ({
   return (
     <div>
       <Flex alignItems={"center"} gap={4}>
-        <Heading as="h2" textColor={"gray.500"} size="sm" >
+        <Heading as="h2" textColor={"brandTextLight"} size="sm" >
           {subtitle}
         </Heading>
         <Countdown from={countdownFrom} value={countdownValue} />
