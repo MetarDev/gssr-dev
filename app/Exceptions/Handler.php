@@ -39,7 +39,6 @@ class Handler extends ExceptionHandler
 public function render($request, Throwable $e)
 {
     $response = parent::render($request, $e);
-    \Illuminate\Support\Facades\Log::info(print_r($response->getStatusCode(), true));
 
     if (! app()->environment(['local', 'testing']) && in_array($response->getStatusCode(), [500, 503, 404, 403])) {
         \Illuminate\Support\Facades\Log::info(print_r('Rendering', true));
