@@ -13,6 +13,7 @@ export const AppMenu = () => {
         <IconButton
           aria-label="Discord"
           variant={"ghost"}
+          colorScheme="gray"
           icon={<FaDiscord size={faIconSize} />}
         />
       </Link>

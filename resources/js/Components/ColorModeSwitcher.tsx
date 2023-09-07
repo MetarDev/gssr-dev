@@ -10,6 +10,7 @@ export const ColorModeSwitcher = ({ size }: { size: number }) => {
 			<IconButton
         onClick={toggleColorMode}
         variant={"ghost"}
+        colorScheme="gray"
         aria-label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}
         icon={colorMode === 'light' ? <MoonIcon boxSize={size} /> : <SunIcon boxSize={size} />}
       />
