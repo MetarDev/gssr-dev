@@ -5,7 +5,7 @@ require 'recipe/laravel.php';
 
 // Config
 
-set('repository', 'git@github.com:MetarDev/support-guesser.git');
+set('repository', 'git@github.com:MetarDev/gssr-dev.git');
 
 set('keep_releases', 7);
 
