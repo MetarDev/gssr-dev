@@ -51,4 +51,14 @@ class Hasher
             })
         );
     }
+
+    /**
+     * Generates a random crc32 hash.
+     *
+     * @return string
+     */
+    public static function generateRandomShortHash(): string
+    {
+        return hash('crc32', (string) (rand() + rand()));
+    }
 }
