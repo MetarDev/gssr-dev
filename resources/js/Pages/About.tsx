@@ -29,7 +29,7 @@ export default function CookiePolicy({
           <Text>Twitter: <Link href="https://twitter.com/MetarDev" isExternal>https://twitter.com/MetarDev</Link></Text>
         </ListItem>
         <ListItem>
-          <Text>GitHub: <Link href="https://github.com/MetarDev">https://github.com/MetarDev</Link>
+          <Text>GitHub: <Link href="https://github.com/MetarDev" isExternal>https://github.com/MetarDev</Link>
           </Text>
         </ListItem>
       </UnorderedList>
