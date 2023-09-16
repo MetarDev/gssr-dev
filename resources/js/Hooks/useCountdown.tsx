@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { resetFavicon, resetTitle, swapFavicon, swapTitle } from "tabky-js";
+import { addBadge, resetFavicon } from "tabky-js";
 
 export const useCountdown = ({
   from,
@@ -20,7 +20,6 @@ export const useCountdown = ({
    * @return void
    */
   const startTimer = () => {
-    swapFavicon({ favicon: "⏳" });
     setIsTimeout(false);
     setIsTimerStarted(true);
     setTimer(from);
@@ -33,7 +32,6 @@ export const useCountdown = ({
    */
   const stopTimer = () => {
     setIsTimerStarted(false);
-    resetTitle();
     resetFavicon();
   };
 
@@ -41,6 +39,7 @@ export const useCountdown = ({
   useEffect(() => {
     if (isTimerStarted && timer <= 0) {
       setIsTimeout(true);
+      resetFavicon();
       return;
     }
 
@@ -50,7 +49,11 @@ export const useCountdown = ({
       }
 
       setTimer((prev) => prev - 1);
-      swapTitle({ title: `${timer}s` });
+      const actualTimer = timer - 1;
+
+      if (actualTimer < 10) {
+        addBadge({ type: "count", count: actualTimer, size: "lg" });
+      }
     }, 1000);
 
     return () => clearInterval(clockInterval);

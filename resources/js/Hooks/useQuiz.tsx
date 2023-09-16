@@ -1,4 +1,10 @@
-import { AnswerInterface, QuestionInterface, QuestionSummaryInterface, Quiz, QuizSummaryInterface } from "@/types/quiz";
+import {
+  AnswerInterface,
+  QuestionInterface,
+  QuestionSummaryInterface,
+  Quiz,
+  QuizSummaryInterface,
+} from "@/types/quiz";
 import { useState } from "react";
 import { useCountdown } from "./useCountdown";
 import { calculateMaxScore, calculateScore } from "@/Helpers/scoring";
@@ -11,23 +17,25 @@ export const useQuiz = ({
   quiz: Quiz;
   questions: QuestionInterface[];
 }) => {
-  const [quizSummary, setQuizSummary] = useState<QuizSummaryInterface|null>(null);
+  const [quizSummary, setQuizSummary] = useState<QuizSummaryInterface | null>(
+    null
+  );
   const [hasStarted, setHasStarted] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
   const [isCurrentQuestionAnswered, setIsCurrentQuestionAnswered] =
     useState(false);
   const [isAnswerPopupOpen, setIsAnswerPopupOpen] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState<QuestionInterface>(questions[0]);
-  const [currentQuestionSummary, setCurrentQuestionSummary] = useState<QuestionSummaryInterface|null>(null);
-  const [currentAnswer, setCurrentAnswer] = useState<AnswerInterface | null>(null);
+  const [currentQuestion, setCurrentQuestion] = useState<QuestionInterface>(
+    questions[0]
+  );
+  const [currentQuestionSummary, setCurrentQuestionSummary] =
+    useState<QuestionSummaryInterface | null>(null);
+  const [currentAnswer, setCurrentAnswer] = useState<AnswerInterface | null>(
+    null
+  );
 
-  const {
-    timer,
-    isTimeout,
-    startTimer,
-    stopTimer,
-  } = useCountdown({
+  const { timer, isTimeout, startTimer, stopTimer } = useCountdown({
     disableTimeout: false,
     from: quiz.timer,
     onTimeout: () => {
@@ -60,29 +68,39 @@ export const useQuiz = ({
    * @param questionSummary Question summary to add to the quiz summary.
    * @returns void
    */
-  const addQuestionSummaryToQuizSummary = (questionSummary: QuestionSummaryInterface) => {
+  const addQuestionSummaryToQuizSummary = (
+    questionSummary: QuestionSummaryInterface
+  ) => {
     const newQuestions = [...(quizSummary?.questions || []), questionSummary];
 
     setQuizSummary({
       score: (quizSummary?.score || 0) + (questionSummary?.score || 0),
-      questions: [ ...newQuestions ],
-      correctQuestions: (quizSummary?.correctQuestions || 0) + (questionSummary?.answeredCorrectly ? 1 : 0),
+      questions: [...newQuestions],
+      correctQuestions:
+        (quizSummary?.correctQuestions || 0) +
+        (questionSummary?.answeredCorrectly ? 1 : 0),
       totalQuestions: (quizSummary?.totalQuestions || 0) + 1,
-      timeSpent: (quizSummary?.timeSpent || 0) + (questionSummary?.timeSpent || 0),
+      timeSpent:
+        (quizSummary?.timeSpent || 0) + (questionSummary?.timeSpent || 0),
       timeTotal: (quizSummary?.timeTotal || 0) + quiz.timer,
-      avgTimePerQuestion: parseFloat((quizSummary ? quizSummary.questions.reduce((acc, question) => {
-        return acc + question.timeSpent;
-      }, 0) / quizSummary.questions.length : 0).toFixed(2)),
+      avgTimePerQuestion: parseFloat(
+        (quizSummary
+          ? quizSummary.questions.reduce((acc, question) => {
+              return acc + question.timeSpent;
+            }, 0) / quizSummary.questions.length
+          : 0
+        ).toFixed(2)
+      ),
       maxScore: calculateMaxScore(quiz),
     });
-  }
+  };
 
   /**
    * Callback when user answers a question.
    *
    * @param answer Answer that the user clicked
    */
-  const onAnswer = (answer: AnswerInterface|null) => {
+  const onAnswer = (answer: AnswerInterface | null) => {
     setIsCurrentQuestionAnswered(true);
     setCurrentAnswer(answer);
     setIsAnswerPopupOpen(true);
@@ -100,11 +118,9 @@ export const useQuiz = ({
     setCurrentQuestionSummary(questionSummary);
 
     if (isCorrect) {
-      swapFavicon({ favicon: "👍", reset: "after" });
-      swapTitle({ title: 'Correct!', reset: "after" });
+      swapFavicon({ favicon: "👍" });
     } else {
-      swapFavicon({ favicon: "👎", reset: "after" });
-      swapTitle({ title: 'Incorrect!', reset: "after" });
+      swapFavicon({ favicon: "👎" });
     }
   };
 
