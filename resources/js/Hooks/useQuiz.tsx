@@ -100,11 +100,9 @@ export const useQuiz = ({
     setCurrentQuestionSummary(questionSummary);
 
     if (isCorrect) {
-      swapFavicon({ favicon: "👍", reset: "after" });
-      swapTitle({ title: 'Correct!', reset: "after" });
+      swapFavicon({ favicon: "👍" });
     } else {
-      swapFavicon({ favicon: "👎", reset: "after" });
-      swapTitle({ title: 'Incorrect!', reset: "after" });
+      swapFavicon({ favicon: "👎" });
     }
   };
 
