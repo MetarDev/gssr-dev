@@ -2,6 +2,7 @@ import { AnswerInterface, QuestionInterface, QuestionSummaryInterface, Quiz, Qui
 import { useState } from "react";
 import { useCountdown } from "./useCountdown";
 import { calculateMaxScore, calculateScore } from "@/Helpers/scoring";
+import { swapFavicon, swapTitle, resetFavicon, resetTitle } from "tabky-js";
 
 export const useQuiz = ({
   quiz,
@@ -97,6 +98,14 @@ export const useQuiz = ({
     };
 
     setCurrentQuestionSummary(questionSummary);
+
+    if (isCorrect) {
+      swapFavicon({ favicon: "👍", reset: "after" });
+      swapTitle({ title: 'Correct!', reset: "after" });
+    } else {
+      swapFavicon({ favicon: "👎", reset: "after" });
+      swapTitle({ title: 'Incorrect!', reset: "after" });
+    }
   };
 
   /**
@@ -106,6 +115,9 @@ export const useQuiz = ({
    */
   const onNextQuestion = () => {
     const newIndex = currentQuestionIndex + 1;
+
+    resetTitle();
+    resetFavicon();
 
     if (currentQuestionSummary) {
       addQuestionSummaryToQuizSummary(currentQuestionSummary);
